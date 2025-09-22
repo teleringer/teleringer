@@ -1,74 +1,31 @@
 'use client';
-
 import { useState } from 'react';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import Head from 'next/head';
 
-export default function Contact() {
-  const [formData, setFormData] = useState({
+type ContactForm = {
+  name: string;
+  email: string;
+  company: string;
+  phone: string;
+  service: string[];   // <- explicit string[]
+  message: string;
+};
+
+export default function ContactPage() {
+  const [formData, setFormData] = useState<ContactForm>({
     name: '',
     email: '',
     company: '',
     phone: '',
-    service: [],
-    message: ''
+    service: [],        // <- now typed correctly
+    message: '',
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState('');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    
-    if (name === 'phone') {
-      // Remove all non-numeric characters
-      const numericValue = value.replace(/\D/g, '');
-      
-      // Limit to 10 digits
-      const limitedValue = numericValue.slice(0, 10);
-      
-      // Format as (XXX) XXX-XXXX
-      let formattedValue = '';
-      if (limitedValue.length > 0) {
-        if (limitedValue.length <= 3) {
-          formattedValue = `(${limitedValue}`;
-        } else if (limitedValue.length <= 6) {
-          formattedValue = `(${limitedValue.slice(0, 3)}) ${limitedValue.slice(3)}`;
-        } else {
-          formattedValue = `(${limitedValue.slice(0, 3)}) ${limitedValue.slice(3, 6)}-${limitedValue.slice(6)}`;
-        }
-      }
-      
-      setFormData(prev => ({
-        ...prev,
-        [name]: formattedValue
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    }
-  };
-
-  const serviceOptions = [
-    'Voice Solutions',
-    'Video Collaboration',
-    'Contact Centers',
-    'Complete UCaaS Package',
-    'eFaxing',
-    'AI Voice Agents',
-    'SIP Trunking',
-    'Other'
-  ];
 
   const handleServiceToggle = (service: string) => {
     setFormData(prev => ({
       ...prev,
       service: prev.service.includes(service)
         ? prev.service.filter(s => s !== service)
-        : [...prev.service, service]
+        : [...prev.service, service],
     }));
   };
 
