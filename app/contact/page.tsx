@@ -1,7 +1,4 @@
-// Server Component (Next 15): styled contact page with Header & Footer, posts to /api/contact
-
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
+// Server Component (Next 15): styled contact page that posts to /api/contact
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
@@ -18,10 +15,9 @@ export default async function ContactPage({
 
   return (
     <div className="min-h-screen bg-white">
-      {/* JSON-LD (no next/head needed in the app router) */}
+      {/* JSON-LD */}
       <script
         type="application/ld+json"
-        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
@@ -56,8 +52,6 @@ export default async function ContactPage({
         }}
       />
 
-      <Header />
-
       {/* Hero */}
       <section className="bg-gradient-to-r from-blue-600 to-blue-800 py-16 text-white">
         <div className="mx-auto max-w-6xl px-4 text-center">
@@ -71,27 +65,18 @@ export default async function ContactPage({
 
       <main className="mx-auto max-w-6xl px-4 py-10">
         {sent && (
-          <div
-            role="status"
-            className="mb-6 rounded-md border border-green-300 bg-green-50 px-4 py-3 text-green-800"
-          >
+          <div role="status" className="mb-6 rounded-md border border-green-300 bg-green-50 px-4 py-3 text-green-800">
             Thanks — your message was sent.
           </div>
         )}
 
         <div className="grid gap-16 lg:grid-cols-2">
-          {/* LEFT: Form (plain HTML → /api/contact) */}
+          {/* LEFT: Form */}
           <section>
             <h2 className="text-3xl font-bold text-gray-900">Send Us a Message</h2>
 
-            <form
-              action="/api/contact"
-              method="post"
-              className="mt-6 space-y-6"
-            >
-              {/* Hidden subject keeps API happy */}
+            <form action="/api/contact" method="post" className="mt-6 space-y-6">
               <input type="hidden" name="subject" value="Contact Request" />
-              {/* Honeypot anti-bot */}
               <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" />
 
               <div className="grid gap-6 md:grid-cols-2">
@@ -104,7 +89,6 @@ export default async function ContactPage({
                     placeholder="Your full name"
                   />
                 </div>
-
                 <div>
                   <label className="mb-2 block text-sm font-medium text-gray-700">Email Address *</label>
                   <input
@@ -126,7 +110,6 @@ export default async function ContactPage({
                     placeholder="Your company name"
                   />
                 </div>
-
                 <div>
                   <label className="mb-2 block text-sm font-medium text-gray-700">Phone Number</label>
                   <input
@@ -138,9 +121,7 @@ export default async function ContactPage({
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-gray-700">
-                  Service Interest (select multiple)
-                </label>
+                <label className="mb-2 block text-sm font-medium text-gray-700">Service Interest (select multiple)</label>
                 <select
                   name="service"
                   multiple
@@ -155,9 +136,7 @@ export default async function ContactPage({
                   <option value="SIP Trunking">SIP Trunking</option>
                   <option value="Other">Other</option>
                 </select>
-                <span className="mt-1 block text-[12px] text-gray-500">
-                  Hold Ctrl/⌘ to select multiple.
-                </span>
+                <span className="mt-1 block text-[12px] text-gray-500">Hold Ctrl/⌘ to select multiple.</span>
               </div>
 
               <div>
@@ -238,7 +217,6 @@ export default async function ContactPage({
               </div>
             </div>
 
-            {/* Why Choose box */}
             <div className="mt-10 rounded-xl bg-gray-50 p-6">
               <h4 className="mb-4 text-xl font-semibold text-gray-900">Why Choose Teleringer?</h4>
               <ul className="space-y-2 text-gray-700">
@@ -251,7 +229,6 @@ export default async function ContactPage({
           </aside>
         </div>
 
-        {/* CTA */}
         <section className="mt-16 rounded-xl bg-blue-50 px-6 py-10 text-center">
           <h2 className="text-3xl font-bold text-gray-900">Ready to Get Started?</h2>
           <p className="mx-auto mt-3 max-w-3xl text-lg text-gray-700">
@@ -267,8 +244,6 @@ export default async function ContactPage({
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }
