@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
-function env(name: string) {
+function reqEnv(name: string) {
   const v = process.env[name];
   if (!v) throw new Error(`Missing env: ${name}`);
   return v;
@@ -10,38 +10,56 @@ function env(name: string) {
 export async function POST(req: NextRequest) {
   try {
     const form = await req.formData();
+
+    // Honeypot: if bots fill this hidden field, ignore
+    if (String(form.get("website") || "").trim() !== "") {
+      return NextResponse.redirect(new URL("/contact?sent=1", req.url), { status: 303 });
+    }
+
     const name = String(form.get("name") || "");
     const email = String(form.get("email") || "");
     const company = String(form.get("company") || "");
     const phone = String(form.get("phone") || "");
     const subject = String(form.get("subject") || "Website Contact");
     const message = String(form.get("message") || "");
-    const services = String(form.get("service") || "");
-    const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://www.teleringer.com";
 
+    // Support multiple checkboxes named "service"
+    const servicesAll = form.getAll("service").map(String).filter(Boolean);
+    const services = servicesAll.join(", ");
+
+    if (!name || !email || !subject || !message) {
+      return NextResponse.json({ ok: false, error: "Missing required fields" }, { status: 400 });
+    }
+
+    // SMTP transport (your cPanel server)
     const transporter = nodemailer.createTransport({
-      host: env("SMTP_HOST"),
-      port: Number(env("SMTP_PORT")),
-      secure: String(env("SMTP_SECURE")) === "true",
-      auth: { user: env("SMTP_USER"), pass: env("SMTP_PASS") },
+      host: reqEnv("SMTP_HOST"),                 // e.g., mail.teleringer.com
+      port: Number(reqEnv("SMTP_PORT")),         // 465 (SSL) or 587 (STARTTLS)
+      secure: String(reqEnv("SMTP_SECURE")) === "true",
+      auth: {
+        user: reqEnv("SMTP_USER"),               // full mailbox, e.g., no-reply@teleringer.com
+        pass: reqEnv("SMTP_PASS"),
+      },
     });
 
+    // 1) Send to Teleringer inbox
     await transporter.sendMail({
-      from: env("MAIL_FROM"),
-      to: env("MAIL_TO"),
-      replyTo: email || env("MAIL_TO"),
+      from: reqEnv("MAIL_FROM"),
+      to: reqEnv("MAIL_TO"),
+      replyTo: email || reqEnv("MAIL_TO"),
       subject: `Contact: ${subject} — ${name}`,
       text:
         `Name: ${name}\nEmail: ${email}\nCompany: ${company}\nPhone: ${phone}\n` +
         (services ? `Services: ${services}\n` : "") +
-        `\nMessage:\n${message}\n\n— Sent from ${SITE}`,
+        `\nMessage:\n${message}\n`,
     });
 
+    // 2) Auto-reply to the visitor
     if (email) {
       await transporter.sendMail({
-        from: env("MAIL_FROM"),
+        from: reqEnv("MAIL_FROM"),
         to: email,
-        replyTo: env("MAIL_TO"),
+        replyTo: reqEnv("MAIL_TO"),
         subject: "We received your message",
         text:
           `Hi ${name || "there"},\n\nThanks for contacting Teleringer.\n` +
@@ -50,9 +68,8 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const redirectTo = new URL(SITE);
-    redirectTo.searchParams.set("sent", "1");
-    return NextResponse.redirect(redirectTo.toString(), { status: 303 });
+    // Redirect back to /contact with a success flag
+    return NextResponse.redirect(new URL("/contact?sent=1", req.url), { status: 303 });
   } catch (err) {
     console.error("contact api error:", err);
     return NextResponse.json({ ok: false }, { status: 500 });
