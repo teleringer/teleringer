@@ -1,4 +1,7 @@
-// Server Component (Next 15): styled contact page that posts to /api/contact
+// Server Component (Next 15): styled contact page with Header & Footer, posts to /api/contact
+
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
@@ -11,28 +14,58 @@ export default async function ContactPage({
   const raw = params.sent;
   const sent = Array.isArray(raw) ? raw[0] === "1" : raw === "1";
 
+  const site = process.env.NEXT_PUBLIC_SITE_URL || "https://www.teleringer.com";
+
   return (
     <div className="min-h-screen bg-white">
+      {/* JSON-LD (no next/head needed in the app router) */}
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ContactPage",
+            "mainEntity": {
+              "@type": "Organization",
+              name: "Teleringer",
+              url: site,
+              contactPoint: [
+                {
+                  "@type": "ContactPoint",
+                  telephone: "+1-570-456-5550",
+                  contactType: "customer service",
+                  email: "info@teleringer.com",
+                  availableLanguage: "English",
+                  hoursAvailable: {
+                    "@type": "OpeningHoursSpecification",
+                    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                    opens: "09:00",
+                    closes: "17:00",
+                  },
+                },
+                {
+                  "@type": "ContactPoint",
+                  contactType: "emergency support",
+                  availableLanguage: "English",
+                  hoursAvailable: "24/7",
+                },
+              ],
+            },
+          }),
+        }}
+      />
+
+      <Header />
+
       {/* Hero */}
-      <section className="bg-gradient-to-b from-blue-700 to-blue-600 text-white">
-        <div className="mx-auto max-w-6xl px-4 py-14">
-          <div className="flex items-center justify-between gap-6">
-            <div>
-              <h1 className="text-3xl font-semibold sm:text-4xl">
-                Get Started with Teleringer
-              </h1>
-              <p className="mt-3 max-w-3xl text-white/90">
-                Ready to transform your business communications? Contact us for a free
-                consultation and discover how our unified solutions can help your business grow.
-              </p>
-            </div>
-            <a
-              href="tel:5704565550"
-              className="hidden shrink-0 rounded-lg bg-white/10 px-5 py-3 text-sm font-medium backdrop-blur hover:bg-white/20 md:block"
-            >
-              Free Demo Call <span className="font-semibold">(570) 456-5550</span>
-            </a>
-          </div>
+      <section className="bg-gradient-to-r from-blue-600 to-blue-800 py-16 text-white">
+        <div className="mx-auto max-w-6xl px-4 text-center">
+          <h1 className="text-4xl font-bold sm:text-5xl">Get Started with Teleringer</h1>
+          <p className="mx-auto mt-4 max-w-3xl text-blue-100">
+            Ready to transform your business communications? Contact us today for a free
+            consultation and discover how our unified solutions can help your business grow.
+          </p>
         </div>
       </section>
 
@@ -46,137 +79,196 @@ export default async function ContactPage({
           </div>
         )}
 
-        <div className="grid gap-8 md:grid-cols-5">
-          {/* LEFT: Form */}
-          <section className="md:col-span-3">
-            <h2 className="text-2xl font-semibold">Send Us a Message</h2>
+        <div className="grid gap-16 lg:grid-cols-2">
+          {/* LEFT: Form (plain HTML → /api/contact) */}
+          <section>
+            <h2 className="text-3xl font-bold text-gray-900">Send Us a Message</h2>
 
             <form
               action="/api/contact"
               method="post"
-              className="mt-5 grid gap-4 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
+              className="mt-6 space-y-6"
             >
-              {/* Hidden subject to keep the API happy */}
+              {/* Hidden subject keeps API happy */}
               <input type="hidden" name="subject" value="Contact Request" />
               {/* Honeypot anti-bot */}
               <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" />
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <label className="block text-sm">
-                  <span className="mb-1 block text-gray-700">Full Name *</span>
+              <div className="grid gap-6 md:grid-cols-2">
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">Full Name *</label>
                   <input
                     name="name"
                     required
-                    className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none ring-blue-600 focus:ring"
+                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
                     placeholder="Your full name"
                   />
-                </label>
+                </div>
 
-                <label className="block text-sm">
-                  <span className="mb-1 block text-gray-700">Email Address *</span>
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">Email Address *</label>
                   <input
                     type="email"
                     name="email"
                     required
-                    className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none ring-blue-600 focus:ring"
+                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
                     placeholder="you@example.com"
                   />
-                </label>
+                </div>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <label className="block text-sm">
-                  <span className="mb-1 block text-gray-700">Company Name</span>
+              <div className="grid gap-6 md:grid-cols-2">
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">Company Name</label>
                   <input
                     name="company"
-                    className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none ring-blue-600 focus:ring"
+                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
                     placeholder="Your company name"
                   />
-                </label>
+                </div>
 
-                <label className="block text-sm">
-                  <span className="mb-1 block text-gray-700">Phone Number</span>
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">Phone Number</label>
                   <input
                     name="phone"
-                    className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none ring-blue-600 focus:ring"
+                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
                     placeholder="(570) 555-1234"
                   />
-                </label>
+                </div>
               </div>
 
-              <label className="block text-sm">
-                <span className="mb-1 block text-gray-700">Service Interest (select multiple)</span>
-                {/* multi-select sends multiple "service" values which our API handles with form.getAll('service') */}
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Service Interest (select multiple)
+                </label>
                 <select
                   name="service"
                   multiple
-                  className="h-28 w-full rounded-md border border-gray-300 px-3 py-2 outline-none ring-blue-600 focus:ring"
+                  className="h-28 w-full rounded-lg border border-gray-300 px-4 py-2 text-sm outline-none ring-blue-500 focus:ring"
                 >
-                  <option value="VoIP / Phone System">VoIP / Phone System</option>
-                  <option value="Website">Website</option>
-                  <option value="AI Concierge / Call Agent">AI Concierge / Call Agent</option>
+                  <option value="Voice Solutions">Voice Solutions</option>
+                  <option value="Video Collaboration">Video Collaboration</option>
+                  <option value="Contact Centers">Contact Centers</option>
+                  <option value="Complete UCaaS Package">Complete UCaaS Package</option>
+                  <option value="eFaxing">eFaxing</option>
+                  <option value="AI Voice Agents">AI Voice Agents</option>
+                  <option value="SIP Trunking">SIP Trunking</option>
+                  <option value="Other">Other</option>
                 </select>
-                <span className="mt-1 block text-[12px] text-gray-500">Hold Ctrl/⌘ to select multiple.</span>
-              </label>
+                <span className="mt-1 block text-[12px] text-gray-500">
+                  Hold Ctrl/⌘ to select multiple.
+                </span>
+              </div>
 
-              <label className="block text-sm">
-                <span className="mb-1 block text-gray-700">Message *</span>
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">Message *</label>
                 <textarea
                   name="message"
                   rows={6}
+                  maxLength={500}
                   required
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none ring-blue-600 focus:ring"
-                  placeholder="Tell us about your communication needs…"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
+                  placeholder="Tell us about your communication needs..."
                 />
-              </label>
-
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  className="inline-flex items-center justify-center rounded-md bg-blue-600 px-5 py-2.5 text-white shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
-                >
-                  Send Message
-                </button>
+                <p className="mt-1 text-xs text-gray-500">Max 500 characters.</p>
               </div>
+
+              <button
+                type="submit"
+                className="w-full rounded-lg bg-blue-600 px-8 py-4 text-sm font-semibold text-white shadow hover:bg-blue-700"
+              >
+                Send Message
+              </button>
             </form>
           </section>
 
           {/* RIGHT: Contact Info */}
-          <aside className="md:col-span-2">
-            <h3 className="text-2xl font-semibold">Get in Touch</h3>
-            <div className="mt-5 space-y-4 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-              <div>
-                <div className="text-sm text-gray-500">Phone</div>
-                <a href="tel:5704565550" className="text-blue-600 hover:underline">
-                  (570) 456-5550
-                </a>
-                <p className="mt-1 text-sm text-gray-600">Call us for immediate assistance</p>
+          <aside>
+            <h3 className="text-3xl font-bold text-gray-900">Get in Touch</h3>
+            <div className="mt-6 space-y-8">
+              <div className="flex items-start gap-4">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
+                  <span className="text-xl text-blue-700">📞</span>
+                </div>
+                <div>
+                  <div className="text-xl font-semibold text-gray-900">Phone</div>
+                  <p className="text-gray-600">Call us for immediate assistance</p>
+                  <a className="text-lg font-medium text-blue-700 hover:underline" href="tel:5704565550">
+                    (570) 456-5550
+                  </a>
+                </div>
               </div>
 
-              <hr className="border-gray-200" />
-
-              <div>
-                <div className="text-sm text-gray-500">Email</div>
-                <a href="mailto:info@teleringer.com" className="text-blue-600 hover:underline">
-                  info@teleringer.com
-                </a>
-                <p className="mt-1 text-sm text-gray-600">Send us an email anytime</p>
+              <div className="flex items-start gap-4">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
+                  <span className="text-xl text-blue-700">✉️</span>
+                </div>
+                <div>
+                  <div className="text-xl font-semibold text-gray-900">Email</div>
+                  <p className="text-gray-600">Send us an email anytime</p>
+                  <a className="font-medium text-blue-700 hover:underline" href="mailto:info@teleringer.com">
+                    info@teleringer.com
+                  </a>
+                </div>
               </div>
 
-              <hr className="border-gray-200" />
-
-              <div>
-                <div className="text-sm text-gray-500">Business Hours</div>
-                <p className="text-sm text-gray-700">
-                  Monday – Friday: 9:00 AM – 5:00 PM EST
-                  <br />
-                  Saturday & Sunday: Emergency Support Only
-                </p>
+              <div className="flex items-start gap-4">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
+                  <span className="text-xl text-blue-700">⏱️</span>
+                </div>
+                <div>
+                  <div className="text-xl font-semibold text-gray-900">Business Hours</div>
+                  <div className="space-y-1 text-gray-600">
+                    <p>Monday – Friday: 9:00 AM – 5:00 PM EST</p>
+                    <p>Saturday & Sunday: Emergency Support Only</p>
+                  </div>
+                </div>
               </div>
+
+              <div className="flex items-start gap-4">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
+                  <span className="text-xl text-blue-700">🛟</span>
+                </div>
+                <div>
+                  <div className="text-xl font-semibold text-gray-900">24/7 Support</div>
+                  <p className="text-gray-600">
+                    Emergency technical support available around the clock for existing customers
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Why Choose box */}
+            <div className="mt-10 rounded-xl bg-gray-50 p-6">
+              <h4 className="mb-4 text-xl font-semibold text-gray-900">Why Choose Teleringer?</h4>
+              <ul className="space-y-2 text-gray-700">
+                <li>✔ 70+ years of telecom expertise</li>
+                <li>✔ Unified communications platform</li>
+                <li>✔ Scalable solutions for any business size</li>
+                <li>✔ Award-winning customer support</li>
+              </ul>
             </div>
           </aside>
         </div>
+
+        {/* CTA */}
+        <section className="mt-16 rounded-xl bg-blue-50 px-6 py-10 text-center">
+          <h2 className="text-3xl font-bold text-gray-900">Ready to Get Started?</h2>
+          <p className="mx-auto mt-3 max-w-3xl text-lg text-gray-700">
+            Schedule a free demo today and see the difference unified communications can make.
+          </p>
+          <div className="mt-6">
+            <a
+              href="tel:5704565550"
+              className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-3 text-white shadow hover:bg-blue-700"
+            >
+              Schedule Free Demo
+            </a>
+          </div>
+        </section>
       </main>
+
+      <Footer />
     </div>
   );
 }
