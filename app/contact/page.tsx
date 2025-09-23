@@ -1,9 +1,16 @@
-export default function ContactPage({
+// Server Component (no client JS needed)
+
+type SearchParams = Record<string, string | string[] | undefined>;
+
+export default async function ContactPage({
   searchParams,
 }: {
-  searchParams?: { sent?: string };
+  // In Next 15, searchParams is a Promise in server components
+  searchParams?: Promise<SearchParams>;
 }) {
-  const sent = searchParams?.sent === "1";
+  const params = (await searchParams) ?? {};
+  const raw = params.sent;
+  const sent = Array.isArray(raw) ? raw[0] === "1" : raw === "1";
 
   return (
     <main style={{ maxWidth: 840, margin: "40px auto", padding: "0 16px", lineHeight: 1.6 }}>
@@ -27,7 +34,7 @@ export default function ContactPage({
         </div>
       )}
 
-      {/* Plain HTML form: posts directly to our API route */}
+      {/* Plain HTML form posts directly to our API route */}
       <form action="/api/contact" method="post" style={{ marginTop: 24, display: "grid", gap: 12 }}>
         <label>
           <span style={{ display: "block", marginBottom: 4 }}>Your name</span>
