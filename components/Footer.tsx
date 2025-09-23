@@ -1,42 +1,72 @@
 export default function Footer() {
   return (
-    <footer className="mt-16 border-t border-gray-200 bg-gray-50">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-3">
+    <footer className="mt-16 bg-slate-900 text-slate-200">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 md:grid-cols-3">
+        {/* Brand + blurb */}
         <div>
-          <div className="text-xl font-extrabold text-blue-700">TELERINGER</div>
-          <p className="mt-2 text-sm text-gray-600">
-            Unified communications for small businesses.
+          <div className="flex items-start gap-1 leading-none">
+            <span className="text-2xl font-extrabold tracking-wide text-red-600">
+              TELERINGER
+            </span>
+            <sup className="mt-0.5 text-[10px] font-semibold text-slate-300">TM</sup>
+          </div>
+          <div className="mt-2 text-xs font-semibold tracking-wide text-blue-200">
+            SMALL BUSINESS COMMUNICATIONS
+          </div>
+
+          <p className="mt-4 max-w-md text-sm text-slate-300">
+            Simplify your communication with our comprehensive UCaaS and CCaaS solutions.
+            Voice, data, video, and text – all in one cloud-based platform.
           </p>
         </div>
-        <div className="text-sm">
-          <div className="font-semibold text-gray-900">Contact</div>
-          <div className="mt-2 space-y-1 text-gray-600">
-            <div>
-              Phone:{" "}
-              <a className="text-blue-700 hover:underline" href="tel:5704565550">
-                (570) 456-5550
-              </a>
-            </div>
-            <div>
-              Email:{" "}
-              <a className="text-blue-700 hover:underline" href="mailto:info@teleringer.com">
-                info@teleringer.com
-              </a>
-            </div>
-            <div>Mon–Fri: 9:00 AM – 5:00 PM EST</div>
-            <div>Sat–Sun: Emergency Support Only</div>
-          </div>
+
+        {/* Contact */}
+        <div>
+          <div className="text-sm text-slate-300">Call us today:</div>
+          <a
+            href="tel:5704565550"
+            className="mt-1 block text-lg font-semibold text-white hover:underline"
+          >
+            (570) 456-5550
+          </a>
+
+          <div className="mt-6 text-sm text-slate-300">Email Us:</div>
+          <a
+            href="mailto:info@teleringer.com"
+            className="mt-1 block font-semibold text-white hover:underline"
+          >
+            info@teleringer.com
+          </a>
         </div>
-        <div className="text-sm">
-          <div className="font-semibold text-gray-900">Links</div>
-          <ul className="mt-2 space-y-1 text-gray-600">
-            <li><a className="hover:underline" href="/">Home</a></li>
-            <li><a className="hover:underline" href="/contact">Contact</a></li>
+
+        {/* Links */}
+        <nav className="text-sm">
+          <ul className="space-y-2">
+            <li>
+              <a className="hover:underline" href="/contact">Contact</a>
+            </li>
+            <li>
+              <a className="hover:underline" href="/client-login">Client Login</a>
+            </li>
+            <li>
+              <a className="hover:underline" href="/privacy-policy">Privacy Policy</a>
+            </li>
+            <li>
+              <a className="hover:underline" href="/terms">Terms</a>
+            </li>
+            <li>
+              <a className="hover:underline" href="/cookie-policy">Cookie Policy</a>
+            </li>
           </ul>
-        </div>
+        </nav>
       </div>
-      <div className="border-t border-gray-200 py-4 text-center text-xs text-gray-500">
-        © {new Date().getFullYear()} Teleringer. All rights reserved.
+
+      <div className="mx-auto max-w-7xl px-4 pb-8">
+        <hr className="border-slate-700" />
+      </div>
+
+      <div className="px-4 pb-8 text-center text-xs text-slate-400">
+        Copyright ©{new Date().getFullYear()} . Teleringer LLC. All rights reserved.
       </div>
     </footer>
   );
