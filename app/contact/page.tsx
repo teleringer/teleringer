@@ -35,7 +35,7 @@ export default async function ContactPage({
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "ContactPage",
-            "mainEntity": {
+            mainEntity: {
               "@type": "Organization",
               name: "Teleringer",
               url: site,
@@ -91,7 +91,7 @@ export default async function ContactPage({
           <section>
             <h2 className="text-3xl font-bold text-gray-900">Send Us a Message</h2>
 
-            <form action="/api/contact" method="post" className="mt-6 space-y-6">
+            <form action="/api/contact" method="post" className="mt-6 space-y-6" noValidate>
               <input type="hidden" name="subject" value="Contact Request" />
               {/* Honeypot */}
               <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" />
@@ -104,6 +104,7 @@ export default async function ContactPage({
                     required
                     className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
                     placeholder="Your full name"
+                    autoComplete="name"
                   />
                 </div>
                 <div>
@@ -114,6 +115,7 @@ export default async function ContactPage({
                     required
                     className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
                     placeholder="you@example.com"
+                    autoComplete="email"
                   />
                 </div>
               </div>
@@ -125,14 +127,24 @@ export default async function ContactPage({
                     name="company"
                     className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
                     placeholder="Your company name"
+                    autoComplete="organization"
                   />
                 </div>
                 <div>
                   <label className="mb-2 block text-sm font-medium text-gray-700">Phone Number</label>
                   <input
+                    id="contact-phone"
                     name="phone"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
+                    type="tel"
+                    inputMode="numeric"
                     placeholder="(570) 555-1234"
+                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
+                    autoComplete="tel"
+                    /* formatted max length: (123) 456-7890 = 14 chars */
+                    maxLength={14}
+                    /* require formatted pattern on submit */
+                    pattern="^\(\d{3}\) \d{3}-\d{4}$"
+                    title="Enter a 10-digit US phone number, e.g., (570) 555-1234"
                   />
                 </div>
               </div>
@@ -150,7 +162,7 @@ export default async function ContactPage({
                         <input
                           id={id}
                           type="checkbox"
-                          name="service"            /* keep the same key so the API's formData.getAll('service') continues to work */
+                          name="service" /* keep same key so API formData.getAll('service') works */
                           value={opt}
                           className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                         />
@@ -266,6 +278,54 @@ export default async function ContactPage({
           </div>
         </section>
       </main>
+
+      {/* Inline mask script (keeps this as a Server Component while adding formatting) */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+(function () {
+  function fmt(v) {
+    var d = (v || "").replace(/\\D/g, "").slice(0, 10);
+    if (!d) return "";
+    if (d.length < 4) return "(" + d;
+    if (d.length < 7) return "(" + d.slice(0,3) + ") " + d.slice(3);
+    return "(" + d.slice(0,3) + ") " + d.slice(3,6) + "-" + d.slice(6);
+  }
+  function handle(e) {
+    var el = e.target;
+    var start = el.selectionStart, end = el.selectionEnd;
+    var before = el.value;
+    el.value = fmt(el.value);
+    // keep cursor near end in common cases
+    if (document.activeElement === el) {
+      var delta = el.value.length - before.length;
+      var pos = (start || 0) + (delta > 0 ? delta : 0);
+      el.setSelectionRange(pos, pos);
+    }
+  }
+  function onlyDigits(e) {
+    // allow control keys; block non-digits (besides navigation/backspace)
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    var k = e.key;
+    if (k.length > 1) return; // arrows, backspace, etc.
+    if (!/\\d/.test(k)) e.preventDefault();
+  }
+  function attach() {
+    var el = document.getElementById("contact-phone");
+    if (!el) return;
+    el.addEventListener("input", handle);
+    el.addEventListener("keypress", onlyDigits);
+    // on page load, normalize any prefilled value
+    el.value = fmt(el.value);
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", attach);
+  } else {
+    attach();
+  }
+})();`,
+        }}
+      />
     </div>
   );
 }
