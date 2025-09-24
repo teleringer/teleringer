@@ -82,7 +82,7 @@ export default async function ContactPage({
             role="status"
             className="mb-6 rounded-md border border-green-300 bg-green-50 px-4 py-3 text-green-800"
           >
-            Thanks — your message was sent.
+            Thank you — your message was sent. A team member will be in contact with you.
           </div>
         )}
 
