@@ -1,6 +1,19 @@
-// Server Component (Next 15): styled contact page that posts to /api/contact
+// Server Component (Next 15): Contact page with checkbox "Service Interest"
 
 type SearchParams = Record<string, string | string[] | undefined>;
+
+const serviceOptions = [
+  "Voice Solutions",
+  "Video Collaboration",
+  "Contact Centers",
+  "Complete UCaaS Package",
+  "eFaxing",
+  "AI Voice Agents",
+  "SIP Trunking",
+  "Other",
+];
+
+const toId = (s: string) => "svc-" + s.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 
 export default async function ContactPage({
   searchParams,
@@ -65,7 +78,10 @@ export default async function ContactPage({
 
       <main className="mx-auto max-w-6xl px-4 py-10">
         {sent && (
-          <div role="status" className="mb-6 rounded-md border border-green-300 bg-green-50 px-4 py-3 text-green-800">
+          <div
+            role="status"
+            className="mb-6 rounded-md border border-green-300 bg-green-50 px-4 py-3 text-green-800"
+          >
             Thanks — your message was sent.
           </div>
         )}
@@ -77,6 +93,7 @@ export default async function ContactPage({
 
             <form action="/api/contact" method="post" className="mt-6 space-y-6">
               <input type="hidden" name="subject" value="Contact Request" />
+              {/* Honeypot */}
               <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" />
 
               <div className="grid gap-6 md:grid-cols-2">
@@ -120,23 +137,28 @@ export default async function ContactPage({
                 </div>
               </div>
 
+              {/* ✅ Checkbox group replaces multi-select */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-gray-700">Service Interest (select multiple)</label>
-                <select
-                  name="service"
-                  multiple
-                  className="h-28 w-full rounded-lg border border-gray-300 px-4 py-2 text-sm outline-none ring-blue-500 focus:ring"
-                >
-                  <option value="Voice Solutions">Voice Solutions</option>
-                  <option value="Video Collaboration">Video Collaboration</option>
-                  <option value="Contact Centers">Contact Centers</option>
-                  <option value="Complete UCaaS Package">Complete UCaaS Package</option>
-                  <option value="eFaxing">eFaxing</option>
-                  <option value="AI Voice Agents">AI Voice Agents</option>
-                  <option value="SIP Trunking">SIP Trunking</option>
-                  <option value="Other">Other</option>
-                </select>
-                <span className="mt-1 block text-[12px] text-gray-500">Hold Ctrl/⌘ to select multiple.</span>
+                <span className="mb-2 block text-sm font-medium text-gray-700">
+                  Service Interest <span className="text-gray-400">(optional)</span>
+                </span>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {serviceOptions.map((opt) => {
+                    const id = toId(opt);
+                    return (
+                      <label key={id} htmlFor={id} className="flex cursor-pointer items-center gap-3">
+                        <input
+                          id={id}
+                          type="checkbox"
+                          name="service"            /* keep the same key so the API's formData.getAll('service') continues to work */
+                          value={opt}
+                          className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        />
+                        <span className="text-sm text-gray-800">{opt}</span>
+                      </label>
+                    );
+                  })}
+                </div>
               </div>
 
               <div>
