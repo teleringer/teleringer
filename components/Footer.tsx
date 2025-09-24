@@ -1,18 +1,25 @@
 import Image from "next/image";
 
 export default function Footer() {
+  // Prefer the public site URL if set; fall back to "/"
+  const homeHref = process.env.NEXT_PUBLIC_SITE_URL || "/";
+
   return (
-    <footer className="mt-16 bg-slate-900 text-slate-200">
+    // Removed mt-16 to eliminate the white gap above the footer
+    <footer className="bg-slate-900 text-slate-200">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 md:grid-cols-3">
         {/* Brand + blurb */}
         <div>
-          <Image
-            src="/brand/footer-logo.png"
-            alt="Teleringer"
-            width={240}
-            height={50}
-            className="h-8 w-auto md:h-10"
-          />
+          {/* Make the logo clickable back to the homepage */}
+          <a href={homeHref} aria-label="Go to Teleringer homepage" className="inline-block">
+            <Image
+              src="/brand/footer-logo.png"
+              alt="Teleringer"
+              width={240}
+              height={50}
+              className="h-8 w-auto md:h-10"
+            />
+          </a>
           <div className="mt-2 text-xs font-semibold tracking-wide text-blue-200">
             SMALL BUSINESS COMMUNICATIONS
           </div>
