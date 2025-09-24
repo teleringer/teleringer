@@ -47,7 +47,7 @@ export default function Footer() {
         <nav className="text-sm">
           <ul className="space-y-2">
             <li><a className="hover:underline" href="/contact">Contact</a></li>
-            <li><a className="hover:underline" href="/client-login">Client Login</a></li>
+            <li><a className="hover:underline" href="https://interface.teleringer.com" target="_blank">Client Login</a></li>
             <li><a className="hover:underline" href="/privacy-policy">Privacy Policy</a></li>
             <li><a className="hover:underline" href="/terms">Terms</a></li>
             <li><a className="hover:underline" href="/cookie-policy">Cookie Policy</a></li>
