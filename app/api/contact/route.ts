@@ -208,15 +208,67 @@ function adminNoticeText(
   );
 }
 
+/** Light spam heuristics */
+function tooManyLinks(s: string, maxLinks = 6) {
+  const links = (s.match(/https?:\/\/|www\./gi) || []).length;
+  return links > maxLinks;
+}
+function containsBadStuff(s: string) {
+  const bad = [
+    "viagra", "porn", "casino", "loan", "crypto investment", "forex",
+    "seo backlinks", "guest post", "guestpost", "smm panel",
+  ];
+  const t = s.toLowerCase();
+  return bad.some((w) => t.includes(w));
+}
+
+/** Cloudflare Turnstile verification */
+async function verifyTurnstile(token?: string) {
+  const secret = process.env.TURNSTILE_SECRET_KEY;
+  if (!secret) return { ok: true }; // allow if not configured yet
+  if (!token) return { ok: false, reason: "missing_token" };
+
+  const form = new URLSearchParams();
+  form.append("secret", secret);
+  form.append("response", token);
+
+  const r = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+    method: "POST",
+    body: form,
+  });
+  const data = await r.json();
+  return { ok: !!data?.success, reason: data?.["error-codes"]?.[0] };
+}
+
 export async function POST(req: NextRequest) {
   try {
+    // Optionally guard giant payloads
+    const contentLength = Number(req.headers.get("content-length") || "0");
+    if (contentLength > 512 * 1024) {
+      return NextResponse.json({ ok: false, error: "Payload too large" }, { status: 413 });
+    }
+
     const form = await req.formData();
 
-    // Honeypot
+    // Honeypot (your existing field)
     if (String(form.get("website") || "").trim() !== "") {
       return NextResponse.redirect(new URL("/contact?sent=1", req.url), { status: 303 });
     }
 
+    // Timing: must be ≥ 2s since page render (set by hidden input on page)
+    const started = Number(String(form.get("form_ts") || "0"));
+    if (!Number.isNaN(started) && started > 0 && Date.now() - started < 2000) {
+      return NextResponse.json({ ok: false, error: "Spam detected (too fast)" }, { status: 400 });
+    }
+
+    // Turnstile token (added by <div class="cf-turnstile">)
+    const tsToken = String(form.get("cf-turnstile-response") || "");
+    const ts = await verifyTurnstile(tsToken);
+    if (!ts.ok) {
+      return NextResponse.json({ ok: false, error: "Captcha failed" }, { status: 400 });
+    }
+
+    // Gather fields (names match your form)
     const name = String(form.get("name") || "");
     const email = String(form.get("email") || "");
     const company = String(form.get("company") || "");
@@ -228,6 +280,9 @@ export async function POST(req: NextRequest) {
 
     if (!name || !email || !subject || !message) {
       return NextResponse.json({ ok: false, error: "Missing required fields" }, { status: 400 });
+    }
+    if (tooManyLinks(message) || containsBadStuff(message)) {
+      return NextResponse.json({ ok: false, error: "Spam content" }, { status: 400 });
     }
 
     const ip =
@@ -247,50 +302,61 @@ export async function POST(req: NextRequest) {
     const logoCid = "logo@teleringer";
     const logoUrl = optEnv("MAIL_LOGO_URL"); // e.g. https://www.teleringer.com/brand/header-logo.png
 
-    // 1) Send to Teleringer inbox (HTML now, matching style)
-    await transporter.sendMail({
-      from: reqEnv("MAIL_FROM"),
-      to: reqEnv("MAIL_TO"),
-      replyTo: email || reqEnv("MAIL_TO"),
-      subject: `Contact: ${subject} — ${name}`,
-      text: adminNoticeText(name, email, company, phone, subject, services, message, ip, when),
-      html: adminNoticeHtml({
-        logoCid: logoUrl ? logoCid : undefined,
-        ip,
-        when,
-        name,
-        email,
-        company,
-        phone,
-        subject,
-        services,
-        message,
-      }),
-      attachments: logoUrl ? [{ filename: "header-logo.png", path: logoUrl, cid: logoCid }] : [],
-    });
-
-    // 2) Auto-reply to the visitor (same professional look)
-    if (email) {
+    // 1) Send to Teleringer inbox (HTML styled)
+    try {
       await transporter.sendMail({
-        from: reqEnv("MAIL_FROM"),
-        to: email,
-        replyTo: reqEnv("MAIL_TO"),
-        subject: "We received your message",
-        text: userReplyText(name, subject, email, company, phone, services, message),
-        html: userReplyHtml({
+        from: reqEnv("MAIL_FROM"), // e.g., "Teleringer <info@teleringer.com>"
+        to: reqEnv("MAIL_TO"),     // e.g., "info@teleringer.com"
+        replyTo: email || reqEnv("MAIL_TO"),
+        subject: `Contact: ${subject} — ${name}`,
+        text: adminNoticeText(name, email, company, phone, subject, services, message, ip, when),
+        html: adminNoticeHtml({
           logoCid: logoUrl ? logoCid : undefined,
+          ip,
+          when,
           name,
-          subject,
           email,
           company,
           phone,
+          subject,
           services,
           message,
         }),
         attachments: logoUrl ? [{ filename: "header-logo.png", path: logoUrl, cid: logoCid }] : [],
       });
+    } catch (e: any) {
+      console.error("SEND_ADMIN_EMAIL_ERROR", e?.response || e);
+      // carry on to user ack; we still confirm to the user
     }
 
+    // 2) Auto-reply to the visitor (same professional look)
+    if (email) {
+      try {
+        await transporter.sendMail({
+          from: reqEnv("MAIL_FROM"), // MUST be your domain for DMARC/SPF alignment
+          to: email,
+          replyTo: reqEnv("MAIL_TO"),
+          subject: "We received your message",
+          text: userReplyText(name, subject, email, company, phone, services, message),
+          html: userReplyHtml({
+            logoCid: logoUrl ? logoCid : undefined,
+            name,
+            subject,
+            email,
+            company,
+            phone,
+            services,
+            message,
+          }),
+          attachments: logoUrl ? [{ filename: "header-logo.png", path: logoUrl, cid: logoCid }] : [],
+        });
+      } catch (e: any) {
+        // If this bounces, you’ll see the server’s reason in Vercel logs
+        console.error("SEND_USER_EMAIL_ERROR", e?.response || e);
+      }
+    }
+
+    // Redirect back to UI with success flag
     return NextResponse.redirect(new URL("/contact?sent=1", req.url), { status: 303 });
   } catch (err) {
     console.error("contact api error:", err);
