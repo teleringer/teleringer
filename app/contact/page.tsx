@@ -1,271 +1,149 @@
-// Server Component (Next 15): Contact page with checkbox "Service Interest"
+// app/contact/page.tsx
+"use client";
 
-type SearchParams = Record<string, string | string[] | undefined>;
+import React from "react";
 
-const serviceOptions = [
-  "Voice Solutions",
-  "Video Collaboration",
-  "Contact Centers",
-  "Complete UCaaS Package",
-  "eFaxing",
-  "AI Voice Agents",
-  "SIP Trunking",
-  "Other",
-];
+/** Formats digits to (XXX) XXX-XXXX and limits to 10 digits */
+function formatPhoneInput(v: string) {
+  // keep only digits
+  const digits = v.replace(/\D/g, "").slice(0, 10);
+  const len = digits.length;
+  if (len === 0) return "";
+  if (len < 4) return `(${digits}`;
+  if (len < 7) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+}
 
-const toId = (s: string) => "svc-" + s.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+export default function ContactPage() {
+  const [phone, setPhone] = React.useState("");
 
-export default async function ContactPage({
-  searchParams,
-}: {
-  searchParams?: Promise<SearchParams>;
-}) {
-  const params = (await searchParams) ?? {};
-  const raw = params.sent;
-  const sent = Array.isArray(raw) ? raw[0] === "1" : raw === "1";
-
-  const site = process.env.NEXT_PUBLIC_SITE_URL || "https://www.teleringer.com";
+  const onPhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPhone(formatPhoneInput(e.target.value));
+  };
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "ContactPage",
-            "mainEntity": {
-              "@type": "Organization",
-              name: "Teleringer",
-              url: site,
-              contactPoint: [
-                {
-                  "@type": "ContactPoint",
-                  telephone: "+1-570-456-5550",
-                  contactType: "customer service",
-                  email: "info@teleringer.com",
-                  availableLanguage: "English",
-                  hoursAvailable: {
-                    "@type": "OpeningHoursSpecification",
-                    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-                    opens: "09:00",
-                    closes: "17:00",
-                  },
-                },
-                {
-                  "@type": "ContactPoint",
-                  contactType: "emergency support",
-                  availableLanguage: "English",
-                  hoursAvailable: "24/7",
-                },
-              ],
-            },
-          }),
-        }}
-      />
+    <main className="min-h-screen py-10">
+      <div className="mx-auto max-w-3xl px-4">
+        <h1 className="text-3xl font-bold mb-6">Contact Teleringer</h1>
 
-      {/* Hero */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 py-16 text-white">
-        <div className="mx-auto max-w-6xl px-4 text-center">
-          <h1 className="text-4xl font-bold sm:text-5xl">Get Started with Teleringer</h1>
-          <p className="mx-auto mt-4 max-w-3xl text-blue-100">
-            Ready to transform your business communications? Contact us today for a free
-            consultation and discover how our unified solutions can help your business grow.
-          </p>
-        </div>
-      </section>
+        {/* 
+          NOTE: This posts directly to the API route expecting multipart/form-data.
+          The hidden "website" field is a honeypot (bots tend to fill everything).
+        */}
+        <form method="POST" action="/api/contact" className="space-y-5">
+          {/* Honeypot */}
+          <div style={{ display: "none" }}>
+            <label>
+              Website (leave empty)
+              <input type="text" name="website" autoComplete="off" />
+            </label>
+          </div>
 
-      <main className="mx-auto max-w-6xl px-4 py-10">
-        {sent && (
-          <div
-            role="status"
-            className="mb-6 rounded-md border border-green-300 bg-green-50 px-4 py-3 text-green-800"
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <label className="block">
+              <span className="block text-sm font-medium">Name*</span>
+              <input
+                name="name"
+                type="text"
+                required
+                className="mt-1 w-full rounded border px-3 py-2"
+                autoComplete="name"
+              />
+            </label>
+
+            <label className="block">
+              <span className="block text-sm font-medium">Email*</span>
+              <input
+                name="email"
+                type="email"
+                required
+                className="mt-1 w-full rounded border px-3 py-2"
+                autoComplete="email"
+              />
+            </label>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <label className="block">
+              <span className="block text-sm font-medium">Company</span>
+              <input
+                name="company"
+                type="text"
+                className="mt-1 w-full rounded border px-3 py-2"
+                autoComplete="organization"
+              />
+            </label>
+
+            <label className="block">
+              <span className="block text-sm font-medium">Phone</span>
+              <input
+                name="phone"
+                type="tel"
+                inputMode="numeric"
+                placeholder="(555) 123-4567"
+                value={phone}
+                onChange={onPhoneChange}
+                // 14 characters max when formatted: "(123) 456-7890"
+                maxLength={14}
+                pattern="^\(\d{3}\) \d{3}-\d{4}$"
+                title="Enter a 10-digit US phone number"
+                className="mt-1 w-full rounded border px-3 py-2"
+                autoComplete="tel"
+              />
+            </label>
+          </div>
+
+          <label className="block">
+            <span className="block text-sm font-medium">Subject*</span>
+            <input
+              name="subject"
+              type="text"
+              required
+              className="mt-1 w-full rounded border px-3 py-2"
+            />
+          </label>
+
+          {/* Example Service Interest checkboxes (name="service") */}
+          <fieldset className="border rounded px-3 py-2">
+            <legend className="text-sm font-semibold">Service Interest</legend>
+            <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
+              <label className="inline-flex items-center gap-2">
+                <input type="checkbox" name="service" value="Business Phone / VoIP" />
+                <span>Business Phone / VoIP</span>
+              </label>
+              <label className="inline-flex items-center gap-2">
+                <input type="checkbox" name="service" value="AI Voice Agent" />
+                <span>AI Voice Agent</span>
+              </label>
+              <label className="inline-flex items-center gap-2">
+                <input type="checkbox" name="service" value="Website Design" />
+                <span>Website Design</span>
+              </label>
+              <label className="inline-flex items-center gap-2">
+                <input type="checkbox" name="service" value="Other" />
+                <span>Other</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <label className="block">
+            <span className="block text-sm font-medium">Message*</span>
+            <textarea
+              name="message"
+              required
+              rows={6}
+              className="mt-1 w-full rounded border px-3 py-2"
+            />
+          </label>
+
+          <button
+            type="submit"
+            className="rounded bg-emerald-600 px-5 py-2 text-white font-medium hover:bg-emerald-700"
           >
-            Thanks — your message was sent.
-          </div>
-        )}
-
-        <div className="grid gap-16 lg:grid-cols-2">
-          {/* LEFT: Form */}
-          <section>
-            <h2 className="text-3xl font-bold text-gray-900">Send Us a Message</h2>
-
-            <form action="/api/contact" method="post" className="mt-6 space-y-6">
-              <input type="hidden" name="subject" value="Contact Request" />
-              {/* Honeypot */}
-              <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" />
-
-              <div className="grid gap-6 md:grid-cols-2">
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">Full Name *</label>
-                  <input
-                    name="name"
-                    required
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
-                    placeholder="Your full name"
-                  />
-                </div>
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">Email Address *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
-                    placeholder="you@example.com"
-                  />
-                </div>
-              </div>
-
-              <div className="grid gap-6 md:grid-cols-2">
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">Company Name</label>
-                  <input
-                    name="company"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
-                    placeholder="Your company name"
-                  />
-                </div>
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">Phone Number</label>
-                  <input
-                    name="phone"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
-                    placeholder="(570) 555-1234"
-                  />
-                </div>
-              </div>
-
-              {/* ✅ Checkbox group replaces multi-select */}
-              <div>
-                <span className="mb-2 block text-sm font-medium text-gray-700">
-                  Service Interest <span className="text-gray-400">(optional)</span>
-                </span>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {serviceOptions.map((opt) => {
-                    const id = toId(opt);
-                    return (
-                      <label key={id} htmlFor={id} className="flex cursor-pointer items-center gap-3">
-                        <input
-                          id={id}
-                          type="checkbox"
-                          name="service"            /* keep the same key so the API's formData.getAll('service') continues to work */
-                          value={opt}
-                          className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                        />
-                        <span className="text-sm text-gray-800">{opt}</span>
-                      </label>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-medium text-gray-700">Message *</label>
-                <textarea
-                  name="message"
-                  rows={6}
-                  maxLength={500}
-                  required
-                  className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
-                  placeholder="Tell us about your communication needs..."
-                />
-                <p className="mt-1 text-xs text-gray-500">Max 500 characters.</p>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full rounded-lg bg-blue-600 px-8 py-4 text-sm font-semibold text-white shadow hover:bg-blue-700"
-              >
-                Send Message
-              </button>
-            </form>
-          </section>
-
-          {/* RIGHT: Contact Info */}
-          <aside>
-            <h3 className="text-3xl font-bold text-gray-900">Get in Touch</h3>
-            <div className="mt-6 space-y-8">
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
-                  <span className="text-xl text-blue-700">📞</span>
-                </div>
-                <div>
-                  <div className="text-xl font-semibold text-gray-900">Phone</div>
-                  <p className="text-gray-600">Call us for immediate assistance</p>
-                  <a className="text-lg font-medium text-blue-700 hover:underline" href="tel:5704565550">
-                    (570) 456-5550
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
-                  <span className="text-xl text-blue-700">✉️</span>
-                </div>
-                <div>
-                  <div className="text-xl font-semibold text-gray-900">Email</div>
-                  <p className="text-gray-600">Send us an email anytime</p>
-                  <a className="font-medium text-blue-700 hover:underline" href="mailto:info@teleringer.com">
-                    info@teleringer.com
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
-                  <span className="text-xl text-blue-700">⏱️</span>
-                </div>
-                <div>
-                  <div className="text-xl font-semibold text-gray-900">Business Hours</div>
-                  <div className="space-y-1 text-gray-600">
-                    <p>Monday – Friday: 9:00 AM – 5:00 PM EST</p>
-                    <p>Saturday & Sunday: Emergency Support Only</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
-                  <span className="text-xl text-blue-700">🛟</span>
-                </div>
-                <div>
-                  <div className="text-xl font-semibold text-gray-900">24/7 Support</div>
-                  <p className="text-gray-600">
-                    Emergency technical support available around the clock for existing customers
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-10 rounded-xl bg-gray-50 p-6">
-              <h4 className="mb-4 text-xl font-semibold text-gray-900">Why Choose Teleringer?</h4>
-              <ul className="space-y-2 text-gray-700">
-                <li>✔ 70+ years of telecom expertise</li>
-                <li>✔ Unified communications platform</li>
-                <li>✔ Scalable solutions for any business size</li>
-                <li>✔ Award-winning customer support</li>
-              </ul>
-            </div>
-          </aside>
-        </div>
-
-        <section className="mt-16 rounded-xl bg-blue-50 px-6 py-10 text-center">
-          <h2 className="text-3xl font-bold text-gray-900">Ready to Get Started?</h2>
-          <p className="mx-auto mt-3 max-w-3xl text-lg text-gray-700">
-            Schedule a free demo today and see the difference unified communications can make.
-          </p>
-          <div className="mt-6">
-            <a
-              href="tel:5704565550"
-              className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-3 text-white shadow hover:bg-blue-700"
-            >
-              Schedule Free Demo
-            </a>
-          </div>
-        </section>
-      </main>
-    </div>
+            Send message
+          </button>
+        </form>
+      </div>
+    </main>
   );
 }
