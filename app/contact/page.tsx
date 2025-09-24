@@ -91,10 +91,15 @@ export default async function ContactPage({
           <section>
             <h2 className="text-3xl font-bold text-gray-900">Send Us a Message</h2>
 
+            {/* NOTE: This form posts to /api/contact (server will verify Turnstile & spam checks) */}
             <form action="/api/contact" method="post" className="mt-6 space-y-6" noValidate>
               <input type="hidden" name="subject" value="Contact Request" />
-              {/* Honeypot */}
+
+              {/* Honeypot (keep as you had it) — must remain empty */}
               <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" />
+
+              {/* ⏱️ Timing field (hidden): server rejects ultra-fast submits */}
+              <input type="hidden" id="form_ts" name="form_ts" value="" />
 
               <div className="grid gap-6 md:grid-cols-2">
                 <div>
@@ -185,6 +190,12 @@ export default async function ContactPage({
                 />
                 <p className="mt-1 text-xs text-gray-500">Max 500 characters.</p>
               </div>
+
+              {/* ✅ Cloudflare Turnstile widget (adds cf-turnstile-response automatically) */}
+              <div
+                className="cf-turnstile"
+                data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
+              />
 
               <button
                 type="submit"
@@ -279,11 +290,15 @@ export default async function ContactPage({
         </section>
       </main>
 
-      {/* Inline mask script (keeps this as a Server Component while adding formatting) */}
+      {/* Load Cloudflare Turnstile script (safe, no style impact) */}
+      <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
+
+      {/* Inline scripts: phone mask + form timestamp setter */}
       <script
         dangerouslySetInnerHTML={{
           __html: `
 (function () {
+  // phone mask (existing)
   function fmt(v) {
     var d = (v || "").replace(/\\D/g, "").slice(0, 10);
     if (!d) return "";
@@ -296,7 +311,6 @@ export default async function ContactPage({
     var start = el.selectionStart, end = el.selectionEnd;
     var before = el.value;
     el.value = fmt(el.value);
-    // keep cursor near end in common cases
     if (document.activeElement === el) {
       var delta = el.value.length - before.length;
       var pos = (start || 0) + (delta > 0 ? delta : 0);
@@ -304,19 +318,22 @@ export default async function ContactPage({
     }
   }
   function onlyDigits(e) {
-    // allow control keys; block non-digits (besides navigation/backspace)
     if (e.ctrlKey || e.metaKey || e.altKey) return;
     var k = e.key;
     if (k.length > 1) return; // arrows, backspace, etc.
     if (!/\\d/.test(k)) e.preventDefault();
   }
   function attach() {
+    // phone mask hookup
     var el = document.getElementById("contact-phone");
-    if (!el) return;
-    el.addEventListener("input", handle);
-    el.addEventListener("keypress", onlyDigits);
-    // on page load, normalize any prefilled value
-    el.value = fmt(el.value);
+    if (el) {
+      el.addEventListener("input", handle);
+      el.addEventListener("keypress", onlyDigits);
+      el.value = fmt(el.value);
+    }
+    // set hidden form timestamp for spam timing check
+    var ts = document.getElementById("form_ts");
+    if (ts) { ts.value = String(Date.now()); }
   }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", attach);
