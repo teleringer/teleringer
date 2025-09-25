@@ -11,6 +11,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        {/* Remix Icon CSS for all <i className="ri-..."> icons used across the site */}
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"
+        />
+      </head>
       <body className="min-h-screen bg-white text-slate-900">
         <Header />
         {children}
