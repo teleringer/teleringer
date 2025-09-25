@@ -9,7 +9,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-slate-900 text-slate-200">
-      <div className={`mx-auto ${containerWidth} px-4 md:px-0`}>
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Grid: 12 cols -> [5 | 1(spacer) | 3 | 3] */}
         <div className="grid grid-cols-1 gap-8 pt-10 pb-5 md:grid-cols-12">
           {/* 1) Brand / blurb (col-span-5) */}
