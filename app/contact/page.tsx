@@ -273,21 +273,6 @@ export default async function ContactPage({
             </div>
           </aside>
         </div>
-
-        <section className="mt-16 rounded-xl bg-blue-50 px-6 py-10 text-center">
-          <h2 className="text-3xl font-bold text-gray-900">Ready to Get Started?</h2>
-          <p className="mx-auto mt-3 max-w-3xl text-lg text-gray-700">
-            Schedule a free demo today and see the difference unified communications can make.
-          </p>
-          <div className="mt-6">
-            <a
-              href="tel:5704565550"
-              className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-3 text-white shadow hover:bg-blue-700"
-            >
-              Schedule Free Demo
-            </a>
-          </div>
-        </section>
       </main>
 
       {/* Load Cloudflare Turnstile script (safe, no style impact) */}
