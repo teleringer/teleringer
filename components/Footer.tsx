@@ -3,17 +3,14 @@ import Image from "next/image";
 export default function Footer() {
   const homeHref = process.env.NEXT_PUBLIC_SITE_URL || "/";
 
-  // Match the width of the section above; adjust this one class if needed.
-  // If your "Ready to Get Started?" block uses a specific max width, copy it here.
-  const containerWidth = "max-w-[1200px]"; // e.g., use "max-w-6xl" or "max-w-screen-xl" to match exactly
-
   return (
     <footer className="bg-slate-900 text-slate-200">
+      {/* Match page sections */}
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        {/* Grid: 12 cols -> [5 | 1(spacer) | 3 | 3] */}
+        {/* Grid: 12 cols -> [4 | 2(spacer) | 3 | 3] */}
         <div className="grid grid-cols-1 gap-8 pt-10 pb-5 md:grid-cols-12">
-          {/* 1) Brand / blurb (col-span-5) */}
-          <div className="md:col-span-5">
+          {/* 1) Brand / blurb (col-span-4) */}
+          <div className="md:col-span-4">
             <a href={homeHref} aria-label="Go to Teleringer homepage" className="inline-block">
               <Image
                 src="/brand/footer-logo.png"
@@ -33,10 +30,10 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* 2) Spacer (col-span-1 on md+) to push right side inward */}
-          <div className="hidden md:col-span-1 md:block" />
+          {/* 2) Spacer to push the right side inward (col-span-2) */}
+          <div className="hidden md:col-span-2 md:block" />
 
-          {/* 3) Contact (col-span-3) */}
+          {/* 3) Contact (left-justified) */}
           <div className="md:col-span-3 text-sm">
             <div className="text-slate-300">Call us today:</div>
             <a
@@ -55,9 +52,9 @@ export default function Footer() {
             </a>
           </div>
 
-          {/* 4) Links (col-span-3) — flush to right edge of container */}
-          <nav className="md:col-span-3 text-sm">
-            <ul className="space-y-1.5">
+          {/* 4) Links (RIGHT-JUSTIFIED, flush with container right edge) */}
+          <nav className="md:col-span-3 text-sm md:text-right">
+            <ul className="space-y-1.5 flex flex-col md:items-end">
               <li><a className="hover:underline" href="/contact">Contact</a></li>
               <li>
                 <a
@@ -76,7 +73,7 @@ export default function Footer() {
           </nav>
         </div>
 
-        {/* Divider kept inside the SAME container so its left/right edges align with columns */}
+        {/* Divider inside the same container so edges align with columns */}
         <hr className="border-slate-700" />
 
         <div className="py-6 text-center text-xs text-slate-400">
