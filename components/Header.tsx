@@ -2,7 +2,8 @@ import Image from "next/image";
 
 export default function Header() {
   return (
-    <header className="bg-white">
+    // Full-width header with thin bottom border
+    <header className="w-full bg-white border-b border-[#1A1600]">
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-4 px-4 py-4 md:grid-cols-3">
         {/* Brand (left) */}
         <a href="/" className="justify-self-start no-underline">
