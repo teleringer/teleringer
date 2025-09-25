@@ -512,7 +512,7 @@ export default function Home() {
 
       {/* CTA Section */}
       <section className="bg-blue-600 py-16 sm:py-20">
-        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
+        <div className="mx-auto max-w-6xl px-4 text-center sm:px-6">
           <h2 className="mb-6 text-3xl font-bold text-white sm:text-4xl">
             Ready to Transform Your Business Communications?
           </h2>
