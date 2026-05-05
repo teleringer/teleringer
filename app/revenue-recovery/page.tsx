@@ -244,49 +244,38 @@ export default function RevenueRecovery() {
               Simple, Honest Pricing
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-gray-600 sm:text-xl">
-              No setup fees. No long-term contracts. Cancel anytime.
+              Simple, affordable, and fully set up for you.
             </p>
           </div>
 
           <div className="grid items-center gap-8 md:grid-cols-3">
-            {/* Starter */}
+            {/* Standard */}
             <div className="rounded-xl bg-white p-6 shadow-md sm:p-8">
               <div className="mb-6">
                 <h3 className="mb-2 text-xl font-bold text-gray-900">
-                  Starter
+                  Standard
                 </h3>
-                <p className="text-gray-500">
-                  For solo operators and micro businesses
-                </p>
               </div>
               <div className="mb-6">
-                <span className="text-4xl font-bold text-gray-900">$97</span>
+                <span className="text-4xl font-bold text-gray-900">$59</span>
                 <span className="text-gray-500">/month</span>
               </div>
               <ul className="mb-8 space-y-3 text-gray-600">
                 <li className="flex items-center">
                   <i className="ri-check-line mr-3 text-green-500"></i>
-                  Call tracking &amp; missed call alerts
+                  Basic missed call recovery
                 </li>
                 <li className="flex items-center">
                   <i className="ri-check-line mr-3 text-green-500"></i>
-                  Voicemail-to-email transcription
+                  Instant text-back
                 </li>
                 <li className="flex items-center">
                   <i className="ri-check-line mr-3 text-green-500"></i>
-                  Basic follow-up sequences
+                  Lead capture
                 </li>
                 <li className="flex items-center">
                   <i className="ri-check-line mr-3 text-green-500"></i>
-                  Monthly performance report
-                </li>
-                <li className="flex items-start text-gray-400">
-                  <i className="ri-close-line mr-3 mt-0.5 text-gray-300"></i>
-                  After-hours call routing
-                </li>
-                <li className="flex items-start text-gray-400">
-                  <i className="ri-close-line mr-3 mt-0.5 text-gray-300"></i>
-                  Text message follow-up
+                  Email or text notifications
                 </li>
               </ul>
               <Link
@@ -304,38 +293,27 @@ export default function RevenueRecovery() {
               </div>
               <div className="mb-6">
                 <h3 className="mb-2 text-xl font-bold text-gray-900">Pro</h3>
-                <p className="text-gray-500">
-                  For growing businesses serious about revenue
-                </p>
               </div>
               <div className="mb-6">
-                <span className="text-4xl font-bold text-blue-600">$247</span>
+                <span className="text-4xl font-bold text-blue-600">$79</span>
                 <span className="text-gray-500">/month</span>
               </div>
               <ul className="mb-8 space-y-3 text-gray-600">
                 <li className="flex items-center">
                   <i className="ri-check-line mr-3 text-green-500"></i>
-                  Everything in Starter
+                  Full recovery conversation
                 </li>
                 <li className="flex items-center">
                   <i className="ri-check-line mr-3 text-green-500"></i>
-                  After-hours call routing
+                  Smart lead qualification
                 </li>
                 <li className="flex items-center">
                   <i className="ri-check-line mr-3 text-green-500"></i>
-                  Text message follow-up
+                  Clean lead summaries
                 </li>
                 <li className="flex items-center">
                   <i className="ri-check-line mr-3 text-green-500"></i>
-                  Dedicated account manager
-                </li>
-                <li className="flex items-center">
-                  <i className="ri-check-line mr-3 text-green-500"></i>
-                  Weekly performance calls
-                </li>
-                <li className="flex items-center">
-                  <i className="ri-check-line mr-3 text-green-500"></i>
-                  Priority phone support
+                  Customized business responses
                 </li>
               </ul>
               <Link
@@ -346,20 +324,16 @@ export default function RevenueRecovery() {
               </Link>
             </div>
 
-            {/* Enterprise */}
+            {/* Premium */}
             <div className="rounded-xl bg-white p-6 shadow-md sm:p-8">
               <div className="mb-6">
                 <h3 className="mb-2 text-xl font-bold text-gray-900">
-                  Enterprise
+                  Premium
                 </h3>
-                <p className="text-gray-500">
-                  For multi-location or high-volume businesses
-                </p>
               </div>
               <div className="mb-6">
-                <span className="text-4xl font-bold text-gray-900">
-                  Custom
-                </span>
+                <span className="text-4xl font-bold text-gray-900">$99</span>
+                <span className="text-gray-500">/month</span>
               </div>
               <ul className="mb-8 space-y-3 text-gray-600">
                 <li className="flex items-center">
@@ -368,33 +342,29 @@ export default function RevenueRecovery() {
                 </li>
                 <li className="flex items-center">
                   <i className="ri-check-line mr-3 text-green-500"></i>
-                  Multi-location support
+                  Appointment request handling
                 </li>
                 <li className="flex items-center">
                   <i className="ri-check-line mr-3 text-green-500"></i>
-                  Custom integrations
+                  Priority tuning
                 </li>
                 <li className="flex items-center">
                   <i className="ri-check-line mr-3 text-green-500"></i>
-                  SLA-backed uptime guarantee
-                </li>
-                <li className="flex items-center">
-                  <i className="ri-check-line mr-3 text-green-500"></i>
-                  Onsite onboarding available
-                </li>
-                <li className="flex items-center">
-                  <i className="ri-check-line mr-3 text-green-500"></i>
-                  Executive reporting dashboard
+                  Monthly performance review
                 </li>
               </ul>
               <Link
                 href="/contact"
                 className="block w-full cursor-pointer whitespace-nowrap rounded-lg border-2 border-blue-600 px-6 py-3 text-center font-semibold text-blue-600 transition-colors hover:bg-blue-600 hover:text-white"
               >
-                Contact Us
+                Get Started
               </Link>
             </div>
           </div>
+
+          <p className="mt-10 text-center text-gray-500">
+            One-time setup: <span className="font-semibold text-gray-700">$100</span>
+          </p>
         </div>
       </section>
 
