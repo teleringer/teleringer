@@ -44,7 +44,7 @@ export default function RevenueRecovery() {
               REVENUE RECOVERY FOR SMALL BUSINESS
             </div>
             <h1 className="mb-6 text-3xl font-bold leading-tight sm:text-4xl md:text-5xl lg:text-6xl">
-              Stop Leaving Money on the Table
+              Stop Losing Customers Every Time You Miss a Call
             </h1>
             <p className="mb-8 text-lg text-blue-100 sm:text-xl">
               Turn missed calls into real leads and booked jobs — automatically.
@@ -175,51 +175,25 @@ export default function RevenueRecovery() {
           <p className="mt-6 text-center text-lg text-gray-600">
             This happens instantly — without you lifting a finger.
           </p>
+          <p className="mt-2 text-center text-lg text-gray-600">
+            And you receive the full lead details ready to follow up.
+          </p>
         </div>
       </section>
 
       {/* Stats Band */}
       <section className="bg-blue-600 py-16 sm:py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="mb-12 text-center">
-            <h2 className="text-3xl font-bold text-white sm:text-4xl">
-              Real Numbers from Real Businesses
-            </h2>
-          </div>
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="text-center">
-              <div className="mb-2 text-5xl font-bold text-white sm:text-6xl">
-                62%
-              </div>
-              <p className="text-lg text-blue-100">
-                of callers never leave a voicemail
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="mb-2 text-5xl font-bold text-white sm:text-6xl">
-                $12K
-              </div>
-              <p className="text-lg text-blue-100">
-                average annual loss from missed calls alone
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="mb-2 text-5xl font-bold text-white sm:text-6xl">
-                78%
-              </div>
-              <p className="text-lg text-blue-100">
-                of customers buy from whoever responds first
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="mb-2 text-5xl font-bold text-white sm:text-6xl">
-                30d
-              </div>
-              <p className="text-lg text-blue-100">
-                average time to first recovered revenue
-              </p>
-            </div>
-          </div>
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 text-center">
+          <h2 className="mb-6 text-3xl font-bold text-white sm:text-4xl">
+            What This Actually Means for Your Business
+          </h2>
+          <p className="mb-4 text-lg text-blue-100 sm:text-xl">
+            If you recover just one missed job per week, this system pays for
+            itself many times over.
+          </p>
+          <p className="text-lg text-blue-100 sm:text-xl">
+            Everything after that is revenue you would have lost.
+          </p>
         </div>
       </section>
 
@@ -353,6 +327,9 @@ export default function RevenueRecovery() {
             One-time setup:{" "}
             <span className="font-semibold text-gray-700">$100</span>
           </p>
+          <p className="mt-3 text-center text-gray-600 font-medium">
+            Most businesses recover the cost with just one job.
+          </p>
         </div>
       </section>
 
@@ -433,8 +410,8 @@ export default function RevenueRecovery() {
             Stop Letting Customers Slip Through the Cracks
           </h2>
           <p className="mb-8 text-lg text-blue-100 sm:text-xl">
-            A quick call with our team is all it takes to get set up and start
-            recovering what you&apos;re losing.
+            If your phone brings in business, missed calls are costing you
+            money. Let&apos;s fix that this week.
           </p>
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <Link

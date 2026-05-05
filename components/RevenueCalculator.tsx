@@ -5,13 +5,13 @@ import { useState } from "react";
 export default function RevenueCalculator() {
   const [missedCalls, setMissedCalls] = useState(3);
   const [jobValue, setJobValue] = useState(300);
-  const [closeRate, setCloseRate] = useState(50);
+  const [closeRate, setCloseRate] = useState(40);
 
   const monthlyLoss = Math.round(missedCalls * 4.33 * jobValue * (closeRate / 100));
   const annualLoss = monthlyLoss * 12;
 
   const fmt = (n: number) =>
-    n >= 1000 ? `$${(n / 1000).toFixed(1)}K` : `$${n}`;
+    `$${n.toLocaleString()}`;
 
   return (
     <section className="bg-white py-16 sm:py-20">
@@ -93,18 +93,18 @@ export default function RevenueCalculator() {
           <div className="mt-10 grid gap-4 sm:grid-cols-2">
             <div className="rounded-xl bg-white p-6 text-center shadow-sm">
               <p className="mb-1 text-sm font-semibold uppercase tracking-wider text-gray-500">
-                Monthly Loss
+                Estimated Revenue Lost
               </p>
               <p className="text-4xl font-bold text-red-500">
-                {fmt(monthlyLoss)}
+                {fmt(monthlyLoss)} / month
               </p>
             </div>
             <div className="rounded-xl bg-white p-6 text-center shadow-sm">
               <p className="mb-1 text-sm font-semibold uppercase tracking-wider text-gray-500">
-                Annual Loss
+                Estimated Revenue Lost
               </p>
               <p className="text-4xl font-bold text-red-600">
-                {fmt(annualLoss)}
+                {fmt(annualLoss)} / year
               </p>
             </div>
           </div>
