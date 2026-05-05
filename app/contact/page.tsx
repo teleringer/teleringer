@@ -4,6 +4,7 @@ type SearchParams = Record<string, string | string[] | undefined>;
 
 const serviceOptions = [
   "Voice Solutions",
+  "Revenue Recovery",
   "Video Collaboration",
   "Contact Centers",
   "Complete UCaaS Package",
