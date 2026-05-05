@@ -7,7 +7,7 @@ export default function RevenueCalculator() {
   const [jobValue, setJobValue] = useState(300);
   const [closeRate, setCloseRate] = useState(40);
 
-  const monthlyLoss = Math.round(missedCalls * 4.33 * jobValue * (closeRate / 100));
+  const monthlyLoss = missedCalls * jobValue * (closeRate / 100) * 4;
   const annualLoss = monthlyLoss * 12;
 
   const fmt = (n: number) =>
@@ -101,7 +101,7 @@ export default function RevenueCalculator() {
             </div>
             <div className="rounded-xl bg-white p-6 text-center shadow-sm">
               <p className="mb-1 text-sm font-semibold uppercase tracking-wider text-gray-500">
-                Estimated Revenue Lost
+                Annual Revenue at Risk
               </p>
               <p className="text-4xl font-bold text-red-600">
                 {fmt(annualLoss)} / year

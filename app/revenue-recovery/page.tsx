@@ -82,7 +82,7 @@ export default function RevenueRecovery() {
           </p>
           <div className="rounded-xl border-2 border-blue-600 bg-white px-8 py-6 shadow-md inline-block">
             <p className="text-xl font-bold text-blue-700 sm:text-2xl">
-              3 missed calls per week &times; $300 job = $3,600/month lost
+              3 missed calls per week &times; $300 job &times; 40% close rate = $1,440/month at risk
             </p>
           </div>
         </div>
