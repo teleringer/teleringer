@@ -276,7 +276,7 @@ export async function POST(req: NextRequest) {
     const subject = String(form.get("subject") || "Website Contact");
     const message = String(form.get("message") || "");
     const servicesAll = form.getAll("service").map(String).filter(Boolean);
-    const services = servicesAll.join(", ");
+    const services = servicesAll.length > 0 ? servicesAll.join(", ") : "Not provided";
 
     if (!name || !email || !subject || !message) {
       return NextResponse.json({ ok: false, error: "Missing required fields" }, { status: 400 });
