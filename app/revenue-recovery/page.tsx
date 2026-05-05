@@ -21,7 +21,7 @@ export default function RevenueRecovery() {
               telephone: "+1-570-456-5550",
             },
             description:
-              "Stop losing money to missed calls, unpaid invoices, and lapsed customers. Teleringer's revenue recovery service helps small businesses take back what's theirs.",
+              "Stop losing money to missed calls and slow follow-up. Teleringer's revenue recovery service helps small businesses take back what's theirs.",
             serviceType: "Revenue Recovery",
             areaServed: { "@type": "Country", name: "United States" },
             url: `${site}/revenue-recovery`,
@@ -100,17 +100,18 @@ export default function RevenueRecovery() {
 
             <div className="rounded-xl bg-white p-6 transition-shadow hover:shadow-lg sm:p-8">
               <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-lg bg-orange-100">
-                <i className="ri-bill-line text-2xl text-orange-600"></i>
+                <i className="ri-time-line text-2xl text-orange-600"></i>
               </div>
               <h3 className="mb-4 text-xl font-semibold text-gray-900 sm:text-2xl">
-                Unpaid Invoices
+                Slow Follow-Up
               </h3>
               <p className="mb-4 text-gray-600">
-                Work you already did. Money you&apos;re already owed. It&apos;s sitting
-                uncollected because follow-up falls through the cracks.
+                Speed wins. The first business to call back gets the job. If
+                your follow-up is slow, someone else is already on the phone
+                with your customer.
               </p>
               <p className="text-gray-600">
-                Consistent, professional outreach changes that.
+                We make sure you&apos;re always the first call back.
               </p>
             </div>
 
@@ -155,9 +156,8 @@ export default function RevenueRecovery() {
                 We Audit Your Gaps
               </h3>
               <p className="text-gray-600">
-                We look at where calls go unanswered, where invoices sit open,
-                and where customers have gone quiet. You see the full picture in
-                plain numbers.
+                We look at where calls go unanswered and where potential
+                customers drop off. You see the full picture in plain numbers.
               </p>
             </div>
 
@@ -183,9 +183,8 @@ export default function RevenueRecovery() {
                 You Get Paid
               </h3>
               <p className="text-gray-600">
-                Calls get answered. Invoices get collected. Past customers come
-                back. The money that was slipping away starts coming in
-                instead.
+                Calls get answered. Leads get followed up. The money that was
+                slipping away starts coming in instead.
               </p>
             </div>
           </div>
@@ -283,11 +282,11 @@ export default function RevenueRecovery() {
                 </li>
                 <li className="flex items-start text-gray-400">
                   <i className="ri-close-line mr-3 mt-0.5 text-gray-300"></i>
-                  Invoice recovery outreach
+                  After-hours call routing
                 </li>
                 <li className="flex items-start text-gray-400">
                   <i className="ri-close-line mr-3 mt-0.5 text-gray-300"></i>
-                  Win-back campaigns
+                  Text message follow-up
                 </li>
               </ul>
               <Link
@@ -320,11 +319,11 @@ export default function RevenueRecovery() {
                 </li>
                 <li className="flex items-center">
                   <i className="ri-check-line mr-3 text-green-500"></i>
-                  Invoice recovery outreach
+                  After-hours call routing
                 </li>
                 <li className="flex items-center">
                   <i className="ri-check-line mr-3 text-green-500"></i>
-                  Win-back campaigns for past clients
+                  Text message follow-up
                 </li>
                 <li className="flex items-center">
                   <i className="ri-check-line mr-3 text-green-500"></i>
