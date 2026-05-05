@@ -1,4 +1,5 @@
 import Link from "next/link";
+import RevenueCalculator from "@/components/RevenueCalculator";
 
 export default function RevenueRecovery() {
   const site =
@@ -21,7 +22,7 @@ export default function RevenueRecovery() {
               telephone: "+1-570-456-5550",
             },
             description:
-              "Stop losing money to missed calls and slow follow-up. Teleringer's revenue recovery service helps small businesses take back what's theirs.",
+              "Turn missed calls into real leads and booked jobs. Teleringer's revenue recovery service helps small businesses stop losing money to unanswered calls.",
             serviceType: "Revenue Recovery",
             areaServed: { "@type": "Country", name: "United States" },
             url: `${site}/revenue-recovery`,
@@ -34,7 +35,7 @@ export default function RevenueRecovery() {
         className="relative flex min-h-[600px] items-center bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(30, 64, 175, 0.85), rgba(59, 130, 246, 0.85)), url('https://readdy.ai/api/search-image?query=Small%20business%20owner%20looking%20at%20phone%20and%20invoice%20paperwork%20at%20desk%2C%20stressed%20expression%2C%20professional%20office%20setting%2C%20warm%20lighting%2C%20blue%20and%20white%20color%20scheme&width=1200&height=600&seq=revenue-recovery-hero&orientation=landscape')",
+            "linear-gradient(rgba(30, 64, 175, 0.85), rgba(59, 130, 246, 0.85)), url('https://readdy.ai/api/search-image?query=Small%20business%20owner%20looking%20at%20phone%20at%20desk%2C%20professional%20office%20setting%2C%20warm%20lighting%2C%20blue%20and%20white%20color%20scheme&width=1200&height=600&seq=revenue-recovery-hero&orientation=landscape')",
         }}
       >
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
@@ -46,8 +47,7 @@ export default function RevenueRecovery() {
               Stop Leaving Money on the Table
             </h1>
             <p className="mb-8 text-lg text-blue-100 sm:text-xl">
-              Every missed call is a missed sale. Every unanswered follow-up is
-              money walking out the door. We help you get it back.
+              Turn missed calls into real leads and booked jobs — automatically.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row">
               <Link
@@ -67,127 +67,114 @@ export default function RevenueRecovery() {
         </div>
       </section>
 
-      {/* Pain Points */}
+      {/* Problem */}
       <section className="bg-gray-50 py-16 sm:py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="mb-12 text-center sm:mb-16">
-            <h2 className="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">
-              Where Businesses Bleed Money Every Day
-            </h2>
-            <p className="mx-auto max-w-3xl text-lg text-gray-600 sm:text-xl">
-              Most business owners don&apos;t realize how much revenue slips away
-              through everyday communication gaps.
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 text-center">
+          <h2 className="mb-6 text-3xl font-bold text-gray-900 sm:text-4xl">
+            Most Missed Calls = Lost Revenue
+          </h2>
+          <p className="mb-4 text-lg text-gray-600">
+            When someone calls your business and you don&apos;t answer, they usually
+            don&apos;t leave a voicemail.
+          </p>
+          <p className="mb-10 text-lg text-gray-600">
+            They call the next company.
+          </p>
+          <div className="rounded-xl border-2 border-blue-600 bg-white px-8 py-6 shadow-md inline-block">
+            <p className="text-xl font-bold text-blue-700 sm:text-2xl">
+              3 missed calls per week &times; $300 job = $3,600/month lost
             </p>
-          </div>
-
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            <div className="rounded-xl bg-white p-6 transition-shadow hover:shadow-lg sm:p-8">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-lg bg-red-100">
-                <i className="ri-phone-off-line text-2xl text-red-600"></i>
-              </div>
-              <h3 className="mb-4 text-xl font-semibold text-gray-900 sm:text-2xl">
-                Missed Calls
-              </h3>
-              <p className="mb-4 text-gray-600">
-                62% of callers won&apos;t leave a voicemail. They hang up and call
-                your competitor instead.
-              </p>
-              <p className="text-gray-600">
-                Every unanswered ring is a real customer with a real budget
-                going somewhere else.
-              </p>
-            </div>
-
-            <div className="rounded-xl bg-white p-6 transition-shadow hover:shadow-lg sm:p-8">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-lg bg-orange-100">
-                <i className="ri-time-line text-2xl text-orange-600"></i>
-              </div>
-              <h3 className="mb-4 text-xl font-semibold text-gray-900 sm:text-2xl">
-                Slow Follow-Up
-              </h3>
-              <p className="mb-4 text-gray-600">
-                Speed wins. The first business to call back gets the job. If
-                your follow-up is slow, someone else is already on the phone
-                with your customer.
-              </p>
-              <p className="text-gray-600">
-                We make sure you&apos;re always the first call back.
-              </p>
-            </div>
-
-            <div className="rounded-xl bg-white p-6 transition-shadow hover:shadow-lg md:col-span-2 lg:col-span-1 sm:p-8">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-lg bg-yellow-100">
-                <i className="ri-user-unfollow-line text-2xl text-yellow-600"></i>
-              </div>
-              <h3 className="mb-4 text-xl font-semibold text-gray-900 sm:text-2xl">
-                Lost Repeat Customers
-              </h3>
-              <p className="mb-4 text-gray-600">
-                Past customers are your easiest sale. They already trust you.
-                They already spent money with you.
-              </p>
-              <p className="text-gray-600">
-                Without regular touchpoints, they forget you exist and move on.
-              </p>
-            </div>
           </div>
         </div>
       </section>
 
+      {/* Calculator */}
+      <RevenueCalculator />
+
       {/* How It Works */}
-      <section id="how-it-works" className="bg-white py-16 sm:py-20">
+      <section id="how-it-works" className="bg-gray-50 py-16 sm:py-20">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <div className="mb-12 text-center sm:mb-16">
             <h2 className="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">
-              How We Recover Your Revenue
+              How the Revenue Recovery System Works
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-gray-600 sm:text-xl">
-              Three straightforward steps. No learning curve. No extra work for
-              your team.
-            </p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-3">
+          <div className="grid gap-8 md:grid-cols-4">
             <div className="text-center">
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-2xl font-bold text-white">
                 1
               </div>
-              <h3 className="mb-3 text-xl font-semibold text-gray-900">
-                We Audit Your Gaps
+              <h3 className="mb-3 text-lg font-semibold text-gray-900">
+                Customer calls and you miss it
               </h3>
-              <p className="text-gray-600">
-                We look at where calls go unanswered and where potential
-                customers drop off. You see the full picture in plain numbers.
-              </p>
             </div>
 
             <div className="text-center">
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-2xl font-bold text-white">
                 2
               </div>
-              <h3 className="mb-3 text-xl font-semibold text-gray-900">
-                We Set Up Your System
+              <h3 className="mb-3 text-lg font-semibold text-gray-900">
+                Instant text goes out
               </h3>
-              <p className="text-gray-600">
-                We configure your phone system, follow-up sequences, and
-                outreach cadence to match how your business actually runs.
-                Setup takes days, not months.
-              </p>
             </div>
 
             <div className="text-center">
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-2xl font-bold text-white">
                 3
               </div>
-              <h3 className="mb-3 text-xl font-semibold text-gray-900">
-                You Get Paid
+              <h3 className="mb-3 text-lg font-semibold text-gray-900">
+                Conversation continues automatically
               </h3>
-              <p className="text-gray-600">
-                Calls get answered. Leads get followed up. The money that was
-                slipping away starts coming in instead.
-              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-2xl font-bold text-white">
+                4
+              </div>
+              <h3 className="mb-3 text-lg font-semibold text-gray-900">
+                You receive the lead details
+              </h3>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Demo Conversation */}
+      <section className="bg-white py-16 sm:py-20">
+        <div className="mx-auto max-w-2xl px-4 sm:px-6">
+          <div className="mb-10 text-center">
+            <h2 className="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">
+              See It In Action
+            </h2>
+          </div>
+
+          <div className="rounded-xl bg-gray-50 p-6 sm:p-8 space-y-4">
+            <div className="flex justify-start">
+              <div className="rounded-xl rounded-tl-none bg-blue-600 px-5 py-3 text-white max-w-xs sm:max-w-sm">
+                <p className="text-sm font-semibold text-blue-200 mb-1">Teleringer</p>
+                <p>Hi, sorry we missed your call — what can we help you with?</p>
+              </div>
+            </div>
+
+            <div className="flex justify-end">
+              <div className="rounded-xl rounded-tr-none bg-white px-5 py-3 shadow-sm border border-gray-200 max-w-xs sm:max-w-sm">
+                <p className="text-sm font-semibold text-gray-400 mb-1">Customer</p>
+                <p className="text-gray-800">I need a quote for junk removal</p>
+              </div>
+            </div>
+
+            <div className="flex justify-start">
+              <div className="rounded-xl rounded-tl-none bg-blue-600 px-5 py-3 text-white max-w-xs sm:max-w-sm">
+                <p className="text-sm font-semibold text-blue-200 mb-1">Teleringer</p>
+                <p>Got it — what&apos;s the address and when were you hoping to have it done?</p>
+              </div>
+            </div>
+          </div>
+
+          <p className="mt-6 text-center text-lg text-gray-600">
+            This happens instantly — without you lifting a finger.
+          </p>
         </div>
       </section>
 
@@ -218,10 +205,10 @@ export default function RevenueRecovery() {
             </div>
             <div className="text-center">
               <div className="mb-2 text-5xl font-bold text-white sm:text-6xl">
-                5×
+                78%
               </div>
               <p className="text-lg text-blue-100">
-                more likely to close a deal with a past customer
+                of customers buy from whoever responds first
               </p>
             </div>
             <div className="text-center">
@@ -363,13 +350,28 @@ export default function RevenueRecovery() {
           </div>
 
           <p className="mt-10 text-center text-gray-500">
-            One-time setup: <span className="font-semibold text-gray-700">$100</span>
+            One-time setup:{" "}
+            <span className="font-semibold text-gray-700">$100</span>
+          </p>
+        </div>
+      </section>
+
+      {/* Differentiation */}
+      <section className="bg-white py-16 sm:py-20">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 text-center">
+          <h2 className="mb-6 text-3xl font-bold text-gray-900 sm:text-4xl">
+            Not Another App You Have to Learn
+          </h2>
+          <p className="text-lg text-gray-600 sm:text-xl">
+            We set it up, customize it for your business, and make sure it
+            works. You don&apos;t need to manage another system or learn new
+            software.
           </p>
         </div>
       </section>
 
       {/* FAQ */}
-      <section className="bg-white py-16 sm:py-20">
+      <section className="bg-gray-50 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <div className="mb-12 text-center sm:mb-16">
             <h2 className="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">
@@ -378,7 +380,7 @@ export default function RevenueRecovery() {
           </div>
 
           <div className="space-y-8">
-            <div className="rounded-xl bg-gray-50 p-6 sm:p-8">
+            <div className="rounded-xl bg-white p-6 sm:p-8">
               <h3 className="mb-3 text-xl font-semibold text-gray-900">
                 How quickly will I see results?
               </h3>
@@ -389,7 +391,7 @@ export default function RevenueRecovery() {
               </p>
             </div>
 
-            <div className="rounded-xl bg-gray-50 p-6 sm:p-8">
+            <div className="rounded-xl bg-white p-6 sm:p-8">
               <h3 className="mb-3 text-xl font-semibold text-gray-900">
                 Do I need to change my current phone number?
               </h3>
@@ -399,23 +401,22 @@ export default function RevenueRecovery() {
               </p>
             </div>
 
-            <div className="rounded-xl bg-gray-50 p-6 sm:p-8">
+            <div className="rounded-xl bg-white p-6 sm:p-8">
               <h3 className="mb-3 text-xl font-semibold text-gray-900">
                 Is there a long-term commitment?
               </h3>
               <p className="text-gray-600">
-                No contracts. You pay month to month. If it&apos;s not working for
-                you, cancel with 30 days&apos; notice. We&apos;d rather earn your business
-                every month than lock you in.
+                No contracts. You pay month to month. Cancel with 30 days&apos;
+                notice anytime.
               </p>
             </div>
 
-            <div className="rounded-xl bg-gray-50 p-6 sm:p-8">
+            <div className="rounded-xl bg-white p-6 sm:p-8">
               <h3 className="mb-3 text-xl font-semibold text-gray-900">
                 What kinds of businesses does this work for?
               </h3>
               <p className="text-gray-600">
-                Any business that relies on the phone to get or keep customers.
+                Any business that relies on the phone to get customers.
                 Contractors, medical offices, law firms, salons, real estate
                 agents, home services — if a missed call costs you money, this
                 is for you.
@@ -429,11 +430,11 @@ export default function RevenueRecovery() {
       <section className="bg-blue-600 py-16 sm:py-20">
         <div className="mx-auto max-w-6xl px-4 text-center sm:px-6">
           <h2 className="mb-6 text-3xl font-bold text-white sm:text-4xl">
-            The Money Is Already There. Let&apos;s Go Get It.
+            Stop Letting Customers Slip Through the Cracks
           </h2>
           <p className="mb-8 text-lg text-blue-100 sm:text-xl">
-            A quick call with our team is all it takes to find out how much
-            you&apos;re losing and exactly how to stop it.
+            A quick call with our team is all it takes to get set up and start
+            recovering what you&apos;re losing.
           </p>
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <Link
