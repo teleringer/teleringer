@@ -108,6 +108,9 @@ export default function RevenueCalculator() {
               </p>
             </div>
           </div>
+          <p className="mt-6 text-center text-gray-500 italic">
+            That&apos;s revenue already trying to reach your business.
+          </p>
         </div>
       </div>
     </section>

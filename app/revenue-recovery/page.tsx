@@ -63,6 +63,9 @@ export default function RevenueRecovery() {
                 See How It Works
               </Link>
             </div>
+            <p className="mt-2 text-sm text-blue-200">
+              Takes less than 10 minutes to get set up
+            </p>
           </div>
         </div>
       </section>
@@ -78,7 +81,7 @@ export default function RevenueRecovery() {
             don&apos;t leave a voicemail.
           </p>
           <p className="mb-10 text-lg text-gray-600">
-            They call the next company.
+            They call the next company—and that job is gone.
           </p>
           <div className="rounded-xl border-2 border-blue-600 bg-white px-8 py-6 shadow-md inline-block">
             <p className="text-xl font-bold text-blue-700 sm:text-2xl">
@@ -177,6 +180,9 @@ export default function RevenueRecovery() {
           </p>
           <p className="mt-2 text-center text-lg text-gray-600">
             And you receive the full lead details ready to follow up.
+          </p>
+          <p className="mt-2 text-center text-lg text-gray-600">
+            So you can step in and close the job.
           </p>
         </div>
       </section>
@@ -330,6 +336,9 @@ export default function RevenueRecovery() {
           <p className="mt-3 text-center text-gray-600 font-medium">
             Most businesses recover the cost with just one job.
           </p>
+          <p className="mt-1 text-center text-gray-500">
+            After that, it&apos;s pure upside.
+          </p>
         </div>
       </section>
 
@@ -411,7 +420,7 @@ export default function RevenueRecovery() {
           </h2>
           <p className="mb-8 text-lg text-blue-100 sm:text-xl">
             If your phone brings in business, missed calls are costing you
-            money. Let&apos;s fix that this week.
+            money. Let&apos;s fix that starting this week.
           </p>
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <Link
