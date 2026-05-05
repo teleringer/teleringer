@@ -31,7 +31,13 @@ export default function Header() {
         </div>
 
         {/* CTA (right) */}
-        <div className="justify-self-end">
+        <div className="flex items-center gap-3 justify-self-end">
+          <a
+            href="/revenue-recovery"
+            className="inline-flex items-center justify-center rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-green-700 transition-colors"
+          >
+            Revenue Recovery
+          </a>
           <a
             href="/contact"
             className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-700"
