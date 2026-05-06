@@ -41,16 +41,37 @@ function fmtPhone(v: string) {
   return "(" + d.slice(0, 3) + ") " + d.slice(3, 6) + "-" + d.slice(6);
 }
 
+const emptyFields = {
+  name: "",
+  email: "",
+  company: "",
+  phone: "",
+  message: "",
+  services: [] as string[],
+};
+
 export default function ContactForm() {
-  const [phone, setPhone] = useState("");
+  const [fields, setFields] = useState(emptyFields);
   const [token, setToken] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-  const formRef = useRef<HTMLFormElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetId = useRef<string | null>(null);
   const formStarted = useRef(Date.now());
+
+  function set(key: keyof typeof emptyFields, value: string) {
+    setFields((prev) => ({ ...prev, [key]: value }));
+  }
+
+  function toggleService(opt: string) {
+    setFields((prev) => ({
+      ...prev,
+      services: prev.services.includes(opt)
+        ? prev.services.filter((s) => s !== opt)
+        : [...prev.services, opt],
+    }));
+  }
 
   function renderWidget() {
     if (!containerRef.current || !window.turnstile || widgetId.current) return;
@@ -112,7 +133,14 @@ export default function ContactForm() {
     setErrorMsg("");
     setSuccessMsg("");
 
-    const fd = new FormData(formRef.current!);
+    const fd = new FormData();
+    fd.set("subject", "Contact Request");
+    fd.set("name", fields.name);
+    fd.set("email", fields.email);
+    fd.set("company", fields.company);
+    fd.set("phone", fields.phone);
+    fd.set("message", fields.message);
+    fields.services.forEach((s) => fd.append("service", s));
     fd.set("form_ts", String(formStarted.current));
     fd.set("cf-turnstile-response", token);
 
@@ -137,8 +165,7 @@ export default function ContactForm() {
         setSuccessMsg(
           "Message sent successfully. We will get back to you shortly."
         );
-        formRef.current?.reset();
-        setPhone("");
+        setFields(emptyFields);
         resetWidget();
       } else {
         const msg =
@@ -182,19 +209,11 @@ export default function ContactForm() {
       )}
 
       <form
-        ref={formRef}
         onSubmit={handleSubmit}
         className="mt-6 space-y-6"
         noValidate
       >
-        <input type="hidden" name="subject" value="Contact Request" />
-        <input
-          type="text"
-          name="website"
-          className="hidden"
-          tabIndex={-1}
-          autoComplete="off"
-        />
+        <input type="hidden" name="website" value="" />
 
         <div className="grid gap-6 md:grid-cols-2">
           <div>
@@ -204,6 +223,8 @@ export default function ContactForm() {
             <input
               name="name"
               required
+              value={fields.name}
+              onChange={(e) => set("name", e.target.value)}
               className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
               placeholder="Your full name"
               autoComplete="name"
@@ -217,6 +238,8 @@ export default function ContactForm() {
               type="email"
               name="email"
               required
+              value={fields.email}
+              onChange={(e) => set("email", e.target.value)}
               className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
               placeholder="you@example.com"
               autoComplete="email"
@@ -231,6 +254,8 @@ export default function ContactForm() {
             </label>
             <input
               name="company"
+              value={fields.company}
+              onChange={(e) => set("company", e.target.value)}
               className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
               placeholder="Your company name"
               autoComplete="organization"
@@ -246,8 +271,8 @@ export default function ContactForm() {
               type="tel"
               inputMode="numeric"
               placeholder="(570) 555-1234"
-              value={phone}
-              onChange={(e) => setPhone(fmtPhone(e.target.value))}
+              value={fields.phone}
+              onChange={(e) => set("phone", fmtPhone(e.target.value))}
               className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
               autoComplete="tel"
               maxLength={14}
@@ -276,6 +301,8 @@ export default function ContactForm() {
                     type="checkbox"
                     name="service"
                     value={opt}
+                    checked={fields.services.includes(opt)}
+                    onChange={() => toggleService(opt)}
                     className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
                   <span className="text-sm text-gray-800">{opt}</span>
@@ -294,6 +321,8 @@ export default function ContactForm() {
             rows={6}
             maxLength={500}
             required
+            value={fields.message}
+            onChange={(e) => set("message", e.target.value)}
             className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
             placeholder="Tell us about your communication needs..."
           />
