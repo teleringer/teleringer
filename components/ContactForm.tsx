@@ -26,6 +26,7 @@ const serviceOptions = [
   "Complete UCaaS Package",
   "eFaxing",
   "AI Voice Agents",
+  "AI Chatbot",
   "SIP Trunking",
   "Other",
 ];
