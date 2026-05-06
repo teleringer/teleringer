@@ -1,30 +1,6 @@
-// Server Component (Next 15): Contact page with checkbox "Service Interest"
+import ContactForm from "@/components/ContactForm";
 
-type SearchParams = Record<string, string | string[] | undefined>;
-
-const serviceOptions = [
-  "Voice Solutions",
-  "Revenue Recovery",
-  "Video Collaboration",
-  "Contact Centers",
-  "Complete UCaaS Package",
-  "eFaxing",
-  "AI Voice Agents",
-  "SIP Trunking",
-  "Other",
-];
-
-const toId = (s: string) => "svc-" + s.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-
-export default async function ContactPage({
-  searchParams,
-}: {
-  searchParams?: Promise<SearchParams>;
-}) {
-  const params = (await searchParams) ?? {};
-  const raw = params.sent;
-  const sent = Array.isArray(raw) ? raw[0] === "1" : raw === "1";
-
+export default async function ContactPage() {
   const site = process.env.NEXT_PUBLIC_SITE_URL || "https://www.teleringer.com";
 
   return (
@@ -78,133 +54,11 @@ export default async function ContactPage({
       </section>
 
       <main className="mx-auto max-w-6xl px-4 py-10">
-        {sent && (
-          <div
-            role="status"
-            className="mb-6 rounded-md border border-green-300 bg-green-50 px-4 py-3 text-green-800"
-          >
-            Thank you — your message was sent. A team member will be in contact with you.
-          </div>
-        )}
-
         <div className="grid gap-16 lg:grid-cols-2">
           {/* LEFT: Form */}
           <section>
             <h2 className="text-3xl font-bold text-gray-900">Send Us a Message</h2>
-
-            {/* NOTE: This form posts to /api/contact (server will verify Turnstile & spam checks) */}
-            <form action="/api/contact" method="post" className="mt-6 space-y-6" noValidate>
-              <input type="hidden" name="subject" value="Contact Request" />
-
-              {/* Honeypot (keep as you had it) — must remain empty */}
-              <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" />
-
-              {/* ⏱️ Timing field (hidden): server rejects ultra-fast submits */}
-              <input type="hidden" id="form_ts" name="form_ts" value="" />
-
-              <div className="grid gap-6 md:grid-cols-2">
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">Full Name *</label>
-                  <input
-                    name="name"
-                    required
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
-                    placeholder="Your full name"
-                    autoComplete="name"
-                  />
-                </div>
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">Email Address *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
-                    placeholder="you@example.com"
-                    autoComplete="email"
-                  />
-                </div>
-              </div>
-
-              <div className="grid gap-6 md:grid-cols-2">
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">Company Name</label>
-                  <input
-                    name="company"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
-                    placeholder="Your company name"
-                    autoComplete="organization"
-                  />
-                </div>
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">Phone Number</label>
-                  <input
-                    id="contact-phone"
-                    name="phone"
-                    type="tel"
-                    inputMode="numeric"
-                    placeholder="(570) 555-1234"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
-                    autoComplete="tel"
-                    /* formatted max length: (123) 456-7890 = 14 chars */
-                    maxLength={14}
-                    /* require formatted pattern on submit */
-                    pattern="^\(\d{3}\) \d{3}-\d{4}$"
-                    title="Enter a 10-digit US phone number, e.g., (570) 555-1234"
-                  />
-                </div>
-              </div>
-
-              {/* ✅ Checkbox group replaces multi-select */}
-              <div>
-                <span className="mb-2 block text-sm font-medium text-gray-700">
-                  Service Interest <span className="text-gray-400">(optional)</span>
-                </span>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {serviceOptions.map((opt) => {
-                    const id = toId(opt);
-                    return (
-                      <label key={id} htmlFor={id} className="flex cursor-pointer items-center gap-3">
-                        <input
-                          id={id}
-                          type="checkbox"
-                          name="service" /* keep same key so API formData.getAll('service') works */
-                          value={opt}
-                          className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                        />
-                        <span className="text-sm text-gray-800">{opt}</span>
-                      </label>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-medium text-gray-700">Message *</label>
-                <textarea
-                  name="message"
-                  rows={6}
-                  maxLength={500}
-                  required
-                  className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none ring-blue-500 focus:ring"
-                  placeholder="Tell us about your communication needs..."
-                />
-                <p className="mt-1 text-xs text-gray-500">Max 500 characters.</p>
-              </div>
-
-              {/* ✅ Cloudflare Turnstile widget (adds cf-turnstile-response automatically) */}
-              <div
-                className="cf-turnstile"
-                data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
-              />
-
-              <button
-                type="submit"
-                className="w-full rounded-lg bg-blue-600 px-8 py-4 text-sm font-semibold text-white shadow hover:bg-blue-700"
-              >
-                Send Message
-              </button>
-            </form>
+            <ContactForm />
           </section>
 
           {/* RIGHT: Contact Info */}
@@ -245,7 +99,7 @@ export default async function ContactPage({
                   <div className="text-xl font-semibold text-gray-900">Business Hours</div>
                   <div className="space-y-1 text-gray-600">
                     <p>Monday – Friday: 9:00 AM – 5:00 PM EST</p>
-                    <p>Saturday & Sunday: Emergency Support Only</p>
+                    <p>Saturday &amp; Sunday: Emergency Support Only</p>
                   </div>
                 </div>
               </div>
@@ -275,60 +129,6 @@ export default async function ContactPage({
           </aside>
         </div>
       </main>
-
-      {/* Load Cloudflare Turnstile script (safe, no style impact) */}
-      <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
-
-      {/* Inline scripts: phone mask + form timestamp setter */}
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-(function () {
-  // phone mask (existing)
-  function fmt(v) {
-    var d = (v || "").replace(/\\D/g, "").slice(0, 10);
-    if (!d) return "";
-    if (d.length < 4) return "(" + d;
-    if (d.length < 7) return "(" + d.slice(0,3) + ") " + d.slice(3);
-    return "(" + d.slice(0,3) + ") " + d.slice(3,6) + "-" + d.slice(6);
-  }
-  function handle(e) {
-    var el = e.target;
-    var start = el.selectionStart, end = el.selectionEnd;
-    var before = el.value;
-    el.value = fmt(el.value);
-    if (document.activeElement === el) {
-      var delta = el.value.length - before.length;
-      var pos = (start || 0) + (delta > 0 ? delta : 0);
-      el.setSelectionRange(pos, pos);
-    }
-  }
-  function onlyDigits(e) {
-    if (e.ctrlKey || e.metaKey || e.altKey) return;
-    var k = e.key;
-    if (k.length > 1) return; // arrows, backspace, etc.
-    if (!/\\d/.test(k)) e.preventDefault();
-  }
-  function attach() {
-    // phone mask hookup
-    var el = document.getElementById("contact-phone");
-    if (el) {
-      el.addEventListener("input", handle);
-      el.addEventListener("keypress", onlyDigits);
-      el.value = fmt(el.value);
-    }
-    // set hidden form timestamp for spam timing check
-    var ts = document.getElementById("form_ts");
-    if (ts) { ts.value = String(Date.now()); }
-  }
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", attach);
-  } else {
-    attach();
-  }
-})();`,
-        }}
-      />
     </div>
   );
 }
