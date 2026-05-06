@@ -45,7 +45,7 @@ export default function ContactForm() {
   const [phone, setPhone] = useState("");
   const [token, setToken] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [sent, setSent] = useState(false);
+  const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -110,17 +110,33 @@ export default function ContactForm() {
 
     setSubmitting(true);
     setErrorMsg("");
+    setSuccessMsg("");
 
     const fd = new FormData(formRef.current!);
     fd.set("form_ts", String(formStarted.current));
     fd.set("cf-turnstile-response", token);
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
     try {
-      const res = await fetch("/api/contact", { method: "POST", body: fd });
-      const json = await res.json().catch(() => ({}));
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        body: fd,
+        signal: controller.signal,
+      });
+
+      let json: Record<string, unknown> = {};
+      try {
+        json = await res.json();
+      } catch {
+        // JSON parse failed — json stays as {}
+      }
 
       if (res.ok && json?.ok) {
-        setSent(true);
+        setSuccessMsg(
+          "Message sent successfully. We will get back to you shortly."
+        );
         formRef.current?.reset();
         setPhone("");
         resetWidget();
@@ -128,33 +144,34 @@ export default function ContactForm() {
         const msg =
           json?.error === "Captcha failed"
             ? "Captcha verification failed. Please complete the checkbox again and resubmit."
-            : json?.error || "Something went wrong. Please try again.";
+            : "Something went wrong. Please complete the captcha again and try once more.";
         setErrorMsg(msg);
         resetWidget();
       }
     } catch {
-      setErrorMsg("Something went wrong. Please try again.");
+      setErrorMsg(
+        "Something went wrong. Please complete the captcha again and try once more."
+      );
       resetWidget();
     } finally {
+      clearTimeout(timeoutId);
       setSubmitting(false);
     }
-  }
-
-  if (sent) {
-    return (
-      <div
-        role="status"
-        className="rounded-md border border-green-300 bg-green-50 px-4 py-3 text-green-800"
-      >
-        Thank you — your message was sent. A team member will be in contact with you.
-      </div>
-    );
   }
 
   const canSubmit = !!token && !submitting;
 
   return (
     <>
+      {successMsg && (
+        <div
+          role="status"
+          className="mb-4 rounded-md border border-green-300 bg-green-50 px-4 py-3 text-green-800"
+        >
+          {successMsg}
+        </div>
+      )}
+
       {errorMsg && (
         <div
           role="alert"
