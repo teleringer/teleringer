@@ -356,7 +356,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.redirect(new URL("/contact?sent=1", req.url), { status: 303 });
   } catch (err) {
     console.error("contact api error:", err);
     return NextResponse.json({ ok: false }, { status: 500 });
