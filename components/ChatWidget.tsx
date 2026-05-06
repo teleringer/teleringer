@@ -20,7 +20,7 @@ export default function ChatWidget() {
   const [step, setStep] = useState<Step>("closed");
   const [lead, setLead] = useState<Lead>(emptyLead);
   const [leadInput, setLeadInput] = useState<Lead>(emptyLead);
-  const [leadErrors, setLeadErrors] = useState<{ name?: string; email?: string }>({});
+  const [leadErrors, setLeadErrors] = useState<{ name?: string; email?: string; phone?: string }>({});
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -36,11 +36,12 @@ export default function ChatWidget() {
   }, [messages, loading, scrollToBottom]);
 
   function validateLead() {
-    const errors: { name?: string; email?: string } = {};
+    const errors: { name?: string; email?: string; phone?: string } = {};
     if (!leadInput.name.trim()) errors.name = "Name is required";
     if (!leadInput.email.trim()) errors.email = "Email is required";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(leadInput.email))
       errors.email = "Enter a valid email";
+    if (!leadInput.phone.trim()) errors.phone = "Phone number is required";
     setLeadErrors(errors);
     return Object.keys(errors).length === 0;
   }
@@ -62,6 +63,12 @@ export default function ChatWidget() {
     ]);
     setStep("chat");
     setTimeout(() => chatInputRef.current?.focus(), 50);
+    // Fire-and-forget lead notification email
+    fetch("/api/chat-lead", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(captured),
+    }).catch(() => {});
   }
 
   async function sendMessage() {
@@ -227,8 +234,7 @@ export default function ChatWidget() {
 
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">
-                Phone Number{" "}
-                <span className="text-gray-400">(optional)</span>
+                Phone Number *
               </label>
               <input
                 type="tel"
@@ -243,6 +249,9 @@ export default function ChatWidget() {
                 maxLength={14}
                 autoComplete="tel"
               />
+              {leadErrors.phone && (
+                <p className="mt-1 text-xs text-red-600">{leadErrors.phone}</p>
+              )}
             </div>
 
             <button
