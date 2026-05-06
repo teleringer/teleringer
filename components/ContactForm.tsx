@@ -56,7 +56,6 @@ export default function ContactForm() {
   const [submitting, setSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-  const formRef = useRef<HTMLFormElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetId = useRef<string | null>(null);
   const formStarted = useRef(Date.now());
@@ -166,8 +165,7 @@ export default function ContactForm() {
         setSuccessMsg(
           "Message sent successfully. We will get back to you shortly."
         );
-        setFields(emptyFields);
-        formRef.current?.reset();
+        setFields({ name: "", email: "", company: "", phone: "", message: "", services: [] });
         resetWidget();
       } else {
         const msg =
@@ -211,7 +209,6 @@ export default function ContactForm() {
       )}
 
       <form
-        ref={formRef}
         onSubmit={handleSubmit}
         className="mt-6 space-y-6"
         noValidate
