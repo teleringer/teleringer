@@ -1,3 +1,5 @@
 .vercel
 .env*.local
 instructions/
+.next
+node_modules/ 
