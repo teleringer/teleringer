@@ -69,6 +69,7 @@ export default function Footer() {
               </li>
               <li><a className="hover:underline" href="/privacy">Privacy Policy</a></li>
               <li><a className="hover:underline" href="/terms">Terms</a></li>
+              <li><a className="hover:underline" href="/sms-consent">SMS Consent</a></li>
               <li><a className="hover:underline" href="/cookie-policy">Cookie Policy</a></li>
             </ul>
           </nav>
