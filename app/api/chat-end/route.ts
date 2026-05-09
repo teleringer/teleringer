@@ -49,21 +49,75 @@ async function generateSummary(messages: Message[]): Promise<string> {
   }
 }
 
+function markdownToHtml(raw: string): string {
+  const text = raw
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+  const inline = (s: string) =>
+    s
+      .replace(/\*\*\*(.+?)\*\*\*/g, "<strong><em>$1</em></strong>")
+      .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+      .replace(/__(.+?)__/g, "<strong>$1</strong>")
+      .replace(/\*([^*\n]+)\*/g, "<em>$1</em>")
+      .replace(/_([^_\n]+)_/g, "<em>$1</em>")
+      .replace(/`([^`\n]+)`/g, '<code style="background:#f3f4f6;padding:1px 3px;border-radius:3px;font-family:monospace;font-size:12px;">$1</code>');
+
+  const lines = text.split("\n");
+  const out: string[] = [];
+  let inUl = false;
+  let inOl = false;
+
+  const closeList = () => {
+    if (inUl) { out.push("</ul>"); inUl = false; }
+    if (inOl) { out.push("</ol>"); inOl = false; }
+  };
+
+  for (const line of lines) {
+    const hm = line.match(/^#{1,3}\s+(.+)/);
+    const ulm = line.match(/^[ \t]*[-*+]\s+(.+)/);
+    const olm = line.match(/^[ \t]*\d+\.\s+(.+)/);
+
+    if (hm) {
+      closeList();
+      out.push(`<p style="margin:6px 0 2px;font-family:Arial,sans-serif;font-size:13px;font-weight:bold;">${inline(hm[1])}</p>`);
+    } else if (ulm) {
+      if (inOl) { out.push("</ol>"); inOl = false; }
+      if (!inUl) { out.push('<ul style="margin:3px 0 3px 16px;padding:0;font-family:Arial,sans-serif;font-size:13px;">'); inUl = true; }
+      out.push(`<li style="margin:1px 0;">${inline(ulm[1])}</li>`);
+    } else if (olm) {
+      if (inUl) { out.push("</ul>"); inUl = false; }
+      if (!inOl) { out.push('<ol style="margin:3px 0 3px 16px;padding:0;font-family:Arial,sans-serif;font-size:13px;">'); inOl = true; }
+      out.push(`<li style="margin:1px 0;">${inline(olm[1])}</li>`);
+    } else {
+      closeList();
+      if (line.trim() === "") {
+        out.push('<div style="height:5px;"></div>');
+      } else {
+        out.push(`<span style="font-family:Arial,sans-serif;font-size:13px;">${inline(line)}</span><br>`);
+      }
+    }
+  }
+  closeList();
+  return out.join("");
+}
+
 function adminEmailHtml(p: {
   name: string;
   email: string;
   phone: string;
   when: string;
-  transcript: string;
+  messages: Message[];
 }) {
   const rows = [
-    ["Name", p.name],
+    ["Name", esc(p.name)],
     ["Email", `<a href="mailto:${esc(p.email)}" style="color:#2563eb;">${esc(p.email)}</a>`],
-    ["Phone", p.phone],
-    ["Time", p.when],
+    ["Phone", esc(p.phone)],
+    ["Time", esc(p.when)],
   ]
     .map(
-      ([label, value], i) => `
+      ([label, value]) => `
 <tr>
   <td style="padding:10px 14px;font-family:Arial,sans-serif;font-size:14px;color:#111827;background:#fafafa;width:80px;">${label}</td>
   <td style="padding:10px 14px;font-family:Arial,sans-serif;font-size:14px;color:#111827;">${value}</td>
@@ -71,11 +125,17 @@ function adminEmailHtml(p: {
     )
     .join("");
 
-  const transcriptRows = p.transcript
-    .split("\n\n")
-    .map((line) => {
-      const isUser = line.startsWith("User:");
-      return `<tr><td style="padding:8px 14px;font-family:Arial,sans-serif;font-size:13px;color:#111827;background:${isUser ? "#eff6ff" : "#f9fafb"};white-space:pre-wrap;word-break:break-word;">${esc(line)}</td></tr>`;
+  const transcriptRows = p.messages
+    .filter((m) => m.content.trim())
+    .map((m) => {
+      const isUser = m.role === "user";
+      const cellContent = isUser
+        ? `<span style="white-space:pre-wrap;word-break:break-word;font-family:Arial,sans-serif;font-size:13px;color:#111827;">${esc(m.content)}</span>`
+        : `<div style="word-break:break-word;">${markdownToHtml(m.content)}</div>`;
+      return `<tr>
+  <td style="padding:8px 10px;font-family:Arial,sans-serif;font-size:11px;font-weight:600;color:${isUser ? "#1d4ed8" : "#374151"};background:${isUser ? "#eff6ff" : "#f9fafb"};vertical-align:top;white-space:nowrap;width:80px;border-top:1px solid #e5e7eb;">${isUser ? "User" : "Assistant"}</td>
+  <td style="padding:8px 14px;background:${isUser ? "#eff6ff" : "#f9fafb"};vertical-align:top;border-top:1px solid #e5e7eb;">${cellContent}</td>
+</tr>`;
     })
     .join("");
 
@@ -231,7 +291,7 @@ export async function POST(req: NextRequest) {
           `Chat transcript from teleringer.com\n\n` +
           `Name:  ${name}\nEmail: ${email}\nPhone: ${phone}\nTime:  ${when}\n\n` +
           `--- Conversation ---\n\n${transcript}`,
-        html: adminEmailHtml({ name, email, phone, when, transcript }),
+        html: adminEmailHtml({ name, email, phone, when, messages }),
       });
     } catch (err) {
       console.error("chat-end admin email error:", err);
