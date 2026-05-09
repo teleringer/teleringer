@@ -160,8 +160,8 @@ export default function PrivacyPage() {
           content: (
             <>
               <p>Teleringer LLC</p>
-              <p>121 S Broad St, 15th Floor PMB 1078</p>
-              <p>Philadelphia, PA 19107</p>
+              <p>142 S Main Ave</p>
+              <p>Scranton, PA 18504</p>
               <p className="mt-3">
                 Email:{" "}
                 <a href="mailto:support@teleringer.com" className="text-gray-900 underline underline-offset-2">
