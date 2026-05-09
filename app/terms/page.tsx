@@ -93,6 +93,14 @@ export default function TermsPage() {
                   You are solely responsible for the content of your custom text-back message
                 </li>
               </ul>
+              <p className="mt-3">
+                Message frequency is one SMS per missed call. Message and data rates may apply.
+                For opt-out instructions, see our{" "}
+                <a href="/sms-consent" className="text-gray-900 underline underline-offset-2">
+                  SMS Consent Policy
+                </a>
+                .
+              </p>
             </>
           ),
         },
