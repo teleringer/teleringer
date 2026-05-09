@@ -26,6 +26,7 @@ export default function ChatWidget() {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatInputRef = useRef<HTMLInputElement>(null);
+  const chatEmailSent = useRef(false);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -54,6 +55,7 @@ export default function ChatWidget() {
       phone: leadInput.phone.trim(),
     };
     const firstName = captured.name.split(/\s+/)[0];
+    chatEmailSent.current = false;
     setLead(captured);
     setMessages([
       {
@@ -166,8 +168,22 @@ export default function ChatWidget() {
     }
   }
 
+  function handleCloseChat() {
+    const hasUserMessage = messages.some((m) => m.role === "user");
+    if (hasUserMessage && !chatEmailSent.current) {
+      chatEmailSent.current = true;
+      fetch("/api/chat-end", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lead, messages }),
+      }).catch(() => {});
+    }
+    setStep("closed");
+  }
+
   const toggleWidget = () => {
     if (step === "closed") setStep("lead");
+    else if (step === "chat") handleCloseChat();
     else setStep("closed");
   };
 
@@ -274,7 +290,7 @@ export default function ChatWidget() {
               <p className="text-blue-200 text-xs">Hi {lead.name.split(/\s+/)[0]}!</p>
             </div>
             <button
-              onClick={() => setStep("closed")}
+              onClick={handleCloseChat}
               className="text-white hover:text-blue-200 text-2xl leading-none mt-0.5"
               aria-label="Close"
             >

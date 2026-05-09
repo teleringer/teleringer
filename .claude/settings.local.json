@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir C:Projectsteleringer *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Projects\\\\teleringer\" -Recurse -Directory)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Sort-Object)",
+      "PowerShell(New-Item *)",
+      "Bash(git push *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(npm run *)",
+      "PowerShell(Get-ChildItem C:\\\\Projects\\\\teleringer -Recurse -Name | Where-Object { $_ -notmatch 'node_modules|\\\\.next|\\\\.git' } | Sort-Object)",
+      "Bash(npx tsc *)",
+      "Bash(npx next *)",
+      "Bash(netstat -ano)",
+      "Bash(findstr :3000)",
+      "Bash(git commit *)",
+      "Bash(npm --version)",
+      "Bash(npm install *)",
+      "Bash(git init *)",
+      "Bash(gh auth *)",
+      "Bash(winget install *)",
+      "Bash(/c/Program Files/GitHub CLI/gh.exe auth *)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo create teleringer/teleringer-missed-calls --private --source=. --remote=origin --push)",
+      "Bash(npx prisma *)"
+    ]
+  }
+}
