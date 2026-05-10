@@ -16,7 +16,7 @@ SERVICES:
 1. Voice Solutions — HD voice, call forwarding, voicemail-to-email, auto-attendant, call analytics, mobile integration
 2. Video Collaboration — conferencing, screen sharing, recording, cross-platform
 3. Contact Centers — intelligent routing, real-time analytics, omnichannel support
-4. Revenue Recovery — missed-call text-back automation; Standard $59/mo, Pro $79/mo, Premium $99/mo + $100 one-time setup fee
+4. Missed Calls — missed-call text-back automation; Standard $59/mo, Pro $79/mo, Premium $99/mo + $100 one-time setup fee
 5. eFax — bank-level encryption, multi-device, cloud storage, email integration
 6. AI Voice Agents — custom AI receptionist, automated sales/orders/refunds, 24/7 service
 7. SIP Trunking — internet-based call routing, free long-distance, cost savings
@@ -24,7 +24,7 @@ SERVICES:
 
 KEY BENEFITS: Up to 60% cost reduction vs traditional phone systems, quick setup (minutes not weeks), 24/7 support, mobile-ready, enterprise security, scalable pricing
 
-REVENUE RECOVERY DETAIL: Instantly texts back missed callers, captures lead info automatically. No contracts, cancel anytime with 30 days notice.
+MISSED CALLS DETAIL: Instantly texts back missed callers, captures lead info automatically. No contracts, cancel anytime with 30 days notice.
 
 To get started: call (570) 456-5550, email info@teleringer.com, or visit the Contact page on the website.`;
 

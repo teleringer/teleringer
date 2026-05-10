@@ -55,7 +55,7 @@ export default function Footer() {
           {/* 4) Links (RIGHT-JUSTIFIED, flush with container right edge) */}
           <nav className="md:col-span-3 text-sm md:text-right">
             <ul className="space-y-1.5 flex flex-col md:items-end">
-              <li><a className="hover:underline" href="/revenue-recovery">Revenue Recovery</a></li>
+              <li><a className="hover:underline" href="/missed-calls">Missed Calls</a></li>
               <li><a className="hover:underline" href="/contact">Contact</a></li>
               <li>
                 <a
